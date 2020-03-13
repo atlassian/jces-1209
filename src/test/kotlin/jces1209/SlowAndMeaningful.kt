@@ -17,15 +17,17 @@ class SlowAndMeaningful private constructor(
         HeadlessChromeBrowser::class.java
     )
 
-    override fun provide(): VirtualUsersSource = AwsVus()
+    private val duration = Duration.ofMinutes(20)
+
+    override fun provide(): VirtualUsersSource = AwsVus(duration)
 
     override fun behave(scenario: Class<out Scenario>): VirtualUserBehavior = VirtualUserBehavior.Builder(scenario)
         .browser(browser)
         .load(
             VirtualUserLoad.Builder()
                 .virtualUsers(72)
-                .flat(Duration.ofMinutes(20))
                 .maxOverallLoad(TemporalRate(15.0, Duration.ofSeconds(1)))
+                .flat(duration)
                 .build()
         )
         .skipSetup(true)

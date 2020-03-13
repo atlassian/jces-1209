@@ -21,7 +21,9 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-class AwsVus : VirtualUsersSource {
+class AwsVus(duration: Duration) : VirtualUsersSource {
+
+    private val lifespan = Duration.ofMinutes(10) + duration
 
     override fun obtainVus(
         resultsTarget: Path,
@@ -33,11 +35,11 @@ class AwsVus : VirtualUsersSource {
             ec2 = aws.ec2,
             workingDirectory = workspace,
             prefix = nonce,
-            lifespan = Duration.ofMinutes(30)
+            lifespan = lifespan
         ).provision()
         val investment = Investment(
             useCase = "Compare Jira Cloud vs DC",
-            lifespan = Duration.ofMinutes(30)
+            lifespan = lifespan
         )
         val network = NetworkFormula(
             investment = investment,

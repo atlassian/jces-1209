@@ -1,7 +1,12 @@
 import com.atlassian.performance.tools.concurrency.api.submitWithLogContext
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
+import com.atlassian.performance.tools.jiraactions.api.ActionMetric
+import com.atlassian.performance.tools.jiraactions.api.ActionResult
+import com.atlassian.performance.tools.jiraactions.api.format.MetricCompactJsonFormat
+import com.atlassian.performance.tools.jiraactions.api.format.MetricJsonFormat
 import com.atlassian.performance.tools.report.api.FullReport
 import com.atlassian.performance.tools.report.api.FullTimeline
+import com.atlassian.performance.tools.report.api.Timeline
 import com.atlassian.performance.tools.report.api.WaterfallHighlightReport
 import com.atlassian.performance.tools.report.api.result.EdibleResult
 import com.atlassian.performance.tools.report.api.result.RawCohortResult
@@ -25,11 +30,12 @@ import java.util.concurrent.Executors
 
 class JiraPerformanceComparisonIT {
 
-    private val workspace = RootWorkspace(Paths.get("build")).currentTask
+    private val workspace = RootWorkspace(Paths.get("build"))
+    private val currentTaskWorkspace = workspace.currentTask
     private val benchmarkQuality: BenchmarkQuality = SlowAndMeaningful.Eager()
 
     init {
-        ConfigurationFactory.setConfigurationFactory(LogConfigurationFactory(workspace))
+        ConfigurationFactory.setConfigurationFactory(LogConfigurationFactory(currentTaskWorkspace))
     }
 
     @Test
@@ -44,9 +50,35 @@ class JiraPerformanceComparisonIT {
         val results = listOf(baseline, experiment).map { it.get().prepareForJudgement(FullTimeline()) }
         FullReport().dump(
             results = results,
-            workspace = workspace.isolateTest("Compare")
+            workspace = currentTaskWorkspace.isolateTest("Compare")
         )
         dumpMegaSlowWaterfalls(results)
+    }
+
+    @Test
+    fun shouldOnlyProcessGatheredData() {
+        val task = "2020-03-06T14-00-16.448"
+
+        val baselineProperties = CohortProperties.load(File("jira-baseline.properties"))
+        val experimentProperties = CohortProperties.load(File("jira-experiment.properties"))
+        val metricFormat = MetricCompactJsonFormat()
+        val timeline = FullTimeline()
+
+        val baselineResult = processResults(
+            baselineProperties.cohort,
+            task,
+            metricFormat,
+            timeline
+        )
+
+        val experimentResult = processResults(
+            experimentProperties.cohort,
+            task,
+            metricFormat,
+            timeline
+        )
+
+        reportByActionResult(task, baselineResult, experimentResult)
     }
 
     private fun benchmark(
@@ -56,10 +88,10 @@ class JiraPerformanceComparisonIT {
         val properties = CohortProperties.load(propertiesFile)
         val options = loadOptions(properties, scenario)
         val cohort = properties.cohort
-        val resultsTarget = workspace.directory.resolve("vu-results").resolve(cohort)
+        val resultsTarget = currentTaskWorkspace.directory.resolve("vu-results").resolve(cohort)
         val provisioned = benchmarkQuality
             .provide()
-            .obtainVus(resultsTarget, workspace.directory)
+            .obtainVus(resultsTarget, currentTaskWorkspace.directory)
         val virtualUsers = provisioned.virtualUsers
         return try {
             virtualUsers.applyLoad(options)
@@ -104,7 +136,7 @@ class JiraPerformanceComparisonIT {
             val megaSlow = result.actionMetrics.filter { it.duration > Duration.ofMinutes(1) }
             WaterfallHighlightReport().report(
                 metrics = megaSlow,
-                workspace = workspace
+                workspace = currentTaskWorkspace
                     .isolateTest("Mega slow")
                     .directory
                     .resolve(result.cohort)
@@ -112,4 +144,42 @@ class JiraPerformanceComparisonIT {
             )
         }
     }
+
+
+    private fun reportByActionResult(task: String, baselineResult: EdibleResult, experimentResult: EdibleResult) {
+        FullReport().dump(
+            results = splitByActionResult(baselineResult) + splitByActionResult(experimentResult),
+            workspace = workspace.isolateTask(task).isolateTest("By ActionResult")
+        )
+    }
+
+    private fun splitByActionResult(edibleResult: EdibleResult): List<EdibleResult> {
+        val result = ActionResult.values()
+            .map { it to mutableListOf<ActionMetric>() }
+            .toMap()
+        edibleResult.actionMetrics.forEach { (result[it.result] ?: error("Invalid result")).add(it) }
+
+        return result.entries.map { it.value.toEdibleResult("${edibleResult.cohort} ${it.key.name}") }
+    }
+
+    private fun processResults(
+        cohort: String,
+        task: String,
+        metricJsonFormat: MetricJsonFormat,
+        timeline: Timeline
+    ): EdibleResult = RawCohortResult.Factory()
+        .fullResult(
+            cohort,
+            workspace.directory
+                .resolve(task)
+                .resolve("vu-results")
+                .resolve(cohort),
+            metricJsonFormat
+        )
+        .prepareForJudgement(timeline)
+
+
+    private fun List<ActionMetric>.toEdibleResult(name: String)
+        : EdibleResult = EdibleResult.Builder(name).actionMetrics(this).build()
+
 }
