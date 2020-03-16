@@ -32,7 +32,6 @@ class JiraPerformanceComparisonIT {
 
     private val workspace = RootWorkspace(Paths.get("build"))
     private val currentTaskWorkspace = workspace.currentTask
-    private val benchmarkQuality: BenchmarkQuality = SlowAndMeaningful.Eager()
 
     init {
         ConfigurationFactory.setConfigurationFactory(LogConfigurationFactory(currentTaskWorkspace))
@@ -42,10 +41,10 @@ class JiraPerformanceComparisonIT {
     fun shouldComparePerformance() {
         val pool = Executors.newCachedThreadPool()
         val baseline = pool.submitWithLogContext("baseline") {
-            benchmark(File("jira-baseline.properties"), JiraDcScenario::class.java)
+            benchmark(File("jira-baseline.properties"), JiraDcScenario::class.java, SlowAndMeaningful())
         }
         val experiment = pool.submitWithLogContext("experiment") {
-            benchmark(File("jira-experiment.properties"), JiraCloudScenario::class.java)
+            benchmark(File("jira-experiment.properties"), JiraCloudScenario::class.java, SlowAndMeaningful())
         }
         val results = listOf(baseline, experiment).map { it.get().prepareForJudgement(FullTimeline()) }
         FullReport().dump(
@@ -78,15 +77,22 @@ class JiraPerformanceComparisonIT {
             timeline
         )
 
+        FullReport().dump(
+            results = listOf(baselineResult, experimentResult),
+            workspace = workspace.isolateTask(task).isolateTest("Compare")
+        )
+
         reportByActionResult(task, baselineResult, experimentResult)
+        dumpMegaSlowWaterfalls(listOf(baselineResult, experimentResult))
     }
 
     private fun benchmark(
         propertiesFile: File,
-        scenario: Class<out Scenario>
+        scenario: Class<out Scenario>,
+        benchmarkQuality: BenchmarkQuality
     ): RawCohortResult {
         val properties = CohortProperties.load(propertiesFile)
-        val options = loadOptions(properties, scenario)
+        val options = loadOptions(properties, scenario, benchmarkQuality)
         val cohort = properties.cohort
         val resultsTarget = currentTaskWorkspace.directory.resolve("vu-results").resolve(cohort)
         val provisioned = benchmarkQuality
@@ -107,7 +113,8 @@ class JiraPerformanceComparisonIT {
 
     private fun loadOptions(
         properties: CohortProperties,
-        scenario: Class<out Scenario>
+        scenario: Class<out Scenario>,
+        benchmarkQuality: BenchmarkQuality
     ): VirtualUserOptions {
         val target = VirtualUserTarget(
             webApplication = properties.jira,
