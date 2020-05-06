@@ -18,6 +18,7 @@ import jces1209.vu.action.SearchServerFilter
 import jces1209.vu.page.DcIssuePage
 import jces1209.vu.page.filters.ServerFiltersPage
 import org.openqa.selenium.By
+import org.openqa.selenium.TakesScreenshot
 
 class JiraDcScenario : Scenario {
 
@@ -32,8 +33,14 @@ class JiraDcScenario : Scenario {
     override fun getActions(
         jira: WebJira,
         seededRandom: SeededRandom,
-        meter: ActionMeter
+        actionMeter: ActionMeter
     ): List<Action> {
+        val meter = ActionMeter.Builder(actionMeter)
+            .appendPostMetricHook(
+                TakeScreenshotHook.Builder(
+                    jira.driver as TakesScreenshot
+                ).build())
+            .build()
         val similarities = ScenarioSimilarities(jira, seededRandom, meter)
         val jsw = WebJiraSoftware(jira)
         val boardsMemory = AdaptiveBoardMemory<AgileBoard>(seededRandom)
