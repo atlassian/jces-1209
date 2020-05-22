@@ -13,15 +13,22 @@ import java.time.Duration
 class DcBoardList(
     private val jira: WebJira
 ) : BoardList() {
+    val boardsTableSelector = By.className("boards-table")
 
     override fun listBoards(): Map<String, Collection<BoardPage>> {
         return mapOf(Companion.boardNameKanban to getKanbanBoards(), boardNameScrum to getScrumBoards())
     }
 
     private fun getKanbanBoards(): Collection<BoardPage> =
-        getBoards()
+        filterAndGetBoards("type-filter-kanban")
             .map {
                 KanbanBoardPage(jira, it)
+            }
+
+    private fun getScrumBoards(): Collection<BoardPage> =
+        filterAndGetBoards("type-filter-scrum")
+            .map {
+                ScrumBoardPage(jira, it)
             }
 
     private fun getBoards(): Collection<String> =
@@ -31,32 +38,48 @@ class DcBoardList(
                 it.getAttribute("data-board-id")
             }
 
-    private fun getScrumBoards(): Collection<BoardPage> {
-        val boardsBeforeFiltering = jira.driver.findElements(By.cssSelector(".boards-list tr"))
-        if (boardsBeforeFiltering.isEmpty()) {
-            return emptyList()
-        }
+    private fun filterAndGetBoards(filterClassName: String): Collection<String> {
+        var boardsTable = jira.driver.wait(
+            Duration.ofSeconds(5),
+            ExpectedConditions.visibilityOfElementLocated(boardsTableSelector)
+        )
 
         jira.driver.wait(
             Duration.ofSeconds(5),
             ExpectedConditions.elementToBeClickable(By.cssSelector("#ghx-manage-boards-filter a"))
         ).click()
 
+        val selectedFilters = jira.driver
+            .findElements(By.cssSelector("#board-types input[type='checkbox']"))
+            .filter { it.isSelected }
+
+        selectedFilters
+            .forEach {
+                it.findElement(By.xpath("./..")).click()
+            }
+
+        if (selectedFilters.isNotEmpty()) {
+            jira.driver.wait(
+                Duration.ofSeconds(15),
+                ExpectedConditions.stalenessOf(boardsTable)
+            )
+            boardsTable = jira.driver.findElement(boardsTableSelector)
+        }
+
         jira.driver.wait(
             Duration.ofSeconds(5),
-            ExpectedConditions.elementToBeClickable(By.className("type-filter-scrum"))
+            ExpectedConditions.elementToBeClickable(By.className(filterClassName))
         ).click()
 
         jira.driver.wait(
             Duration.ofSeconds(15),
-            ExpectedConditions.and(
-                *boardsBeforeFiltering.map { ExpectedConditions.stalenessOf(it) }.toTypedArray()
-            )
+            ExpectedConditions.stalenessOf(boardsTable)
         )
 
+        jira.driver
+            .findElement(By.id("ghx-rv-visibility"))
+            .click()
+
         return getBoards()
-            .map {
-                ScrumBoardPage(jira, it)
-            }
     }
 }
