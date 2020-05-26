@@ -19,7 +19,7 @@ class CreateAnIssue(
     private val jira: WebJira,
     private val meter: ActionMeter,
     private val projectMemory: ProjectMemory,
-    private val createIssueButton: By
+    private val createIssueButtons: List<By>
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
@@ -49,10 +49,15 @@ class CreateAnIssue(
         val driver = jira.driver
         driver
             .wait(
-                condition = elementToBeClickable(createIssueButton),
+                condition = or(*createIssueButtons.map { elementToBeClickable(it) }.toTypedArray()),
                 timeout = Duration.ofSeconds(10)
             )
-            .click()
+
+        createIssueButtons
+            .flatMap { driver.findElements(it) }
+            .filter { it.isDisplayed }
+            .forEach { it.click() }
+
         driver.wait(
             condition = visibilityOfElementLocated(By.id("create-issue-dialog")),
             timeout = Duration.ofSeconds(30)

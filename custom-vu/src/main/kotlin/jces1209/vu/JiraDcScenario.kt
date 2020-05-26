@@ -50,7 +50,7 @@ class JiraDcScenario : Scenario {
                 jira = jira,
                 meter = meter,
                 projectMemory = similarities.projectMemory,
-                createIssueButton = By.id("create_link")
+                createIssueButtons = listOf(By.id("create_link"))
             ),
             searchWithJql = SearchServerFilter(
                 jira = jira,

@@ -50,7 +50,7 @@ class JiraCloudScenario : Scenario {
                 jira = jira,
                 meter = meter,
                 projectMemory = similarities.projectMemory,
-                createIssueButton = By.id("createGlobalItem")
+                createIssueButtons = listOf(By.id("createGlobalItem"), By.id("createGlobalItemIconButton"))
             ),
             searchWithJql = SearchCloudFilter(
                 jira = jira,
