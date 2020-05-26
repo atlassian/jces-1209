@@ -54,6 +54,9 @@ class DcIssuePage(
         return this
     }
 
+    override fun addAttachment() {
+        TODO("Not yet implemented")
+    }
     override fun linkIssue(): DcIssueLinking {
         return DcIssueLinking(driver)
     }

@@ -60,6 +60,9 @@ class CloudIssuePage(
         return CloudIssueLinking(driver)
     }
 
+    override fun addAttachment() {
+        TODO("Not yet implemented")
+    }
     private fun isCommentingClassic(): Boolean = driver
         .findElements(By.id("footer-comment-button"))
         .isNotEmpty()
