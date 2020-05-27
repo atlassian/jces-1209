@@ -9,7 +9,6 @@ import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveProjectMemory
-import com.atlassian.performance.tools.jiraactions.api.w3c.JavascriptW3cPerformanceTimeline
 import jces1209.vu.action.BrowseBoards
 import jces1209.vu.action.BrowsePopularFilters
 import jces1209.vu.action.ViewBoard
@@ -17,10 +16,8 @@ import jces1209.vu.action.WorkAnIssue
 import jces1209.vu.page.AbstractIssuePage
 import jces1209.vu.page.JiraTips
 import jces1209.vu.page.boards.browse.BrowseBoardsPage
-import jces1209.vu.page.boards.browse.dc.DcBrowseBoardsPage
 import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.filters.FiltersPage
-import org.openqa.selenium.JavascriptExecutor
 import java.net.URI
 import java.util.Collections
 
@@ -57,7 +54,8 @@ class ScenarioSimilarities(
             random = seededRandom,
             editProbability = 0.00f, // 0.10f if we can mutate data
             commentProbability = 0.00f, // 0.04f if we can mutate data
-            linkIssueProbability = 0.00f // 0.10f if we can mutate data
+            linkIssueProbability = 0.00f, // 0.10f if we can mutate data
+            attachScreenShotProbability = 0.00f
         ),
         projectSummary = ProjectSummaryAction(
             jira = jira,

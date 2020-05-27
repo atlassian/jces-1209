@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.*
 import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
+import com.atlassian.performance.tools.jiraactions.api.observation.IssuesOnBoard
 import jces1209.vu.MeasureType.Companion.ISSUE_EDIT_DESCRIPTION
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK_LOAD_FORM
@@ -24,7 +25,8 @@ class WorkAnIssue(
     private val random: SeededRandom,
     private val editProbability: Float,
     private val commentProbability: Float,
-    private val linkIssueProbability: Float
+    private val linkIssueProbability: Float,
+    private val attachScreenShotProbability: Float
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
@@ -43,6 +45,9 @@ class WorkAnIssue(
             linkIssue(loadedIssuePage, issueKey.substringBefore("-"))
         }
         if (random.random.nextFloat() < commentProbability) {
+            comment(loadedIssuePage)
+        }
+        if (random.random.nextFloat() < attachScreenShotProbability) {
             comment(loadedIssuePage)
         }
     }
@@ -90,5 +95,16 @@ class WorkAnIssue(
                 commenting.waitForTheNewComment()
             }
         }
+    }
+    private fun attachScreenShot(issuePage: AbstractIssuePage) {
+        val attachScreenShot = issuePage.addAttachment()
+        attachScreenShot.makeScreenShot()
+        meter.measure(
+            key = ActionType("Attach ScreenShot") { Unit },
+            action = {
+                attachScreenShot.pasteScreenShot()
+                attachScreenShot.waitForTheScreenShotAttached()
+            }
+        )
     }
 }
