@@ -48,7 +48,7 @@ class WorkAnIssue(
             comment(loadedIssuePage)
         }
         if (random.random.nextFloat() < attachScreenShotProbability) {
-            comment(loadedIssuePage)
+            attachScreenShot(loadedIssuePage)
         }
     }
 
