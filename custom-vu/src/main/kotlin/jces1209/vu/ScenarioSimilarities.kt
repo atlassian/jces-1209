@@ -9,7 +9,6 @@ import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveProjectMemory
-import com.atlassian.performance.tools.jiraactions.api.w3c.JavascriptW3cPerformanceTimeline
 import jces1209.vu.action.BrowseBoards
 import jces1209.vu.action.BrowsePopularFilters
 import jces1209.vu.action.ViewBoard
@@ -17,12 +16,10 @@ import jces1209.vu.action.WorkAnIssue
 import jces1209.vu.page.AbstractIssuePage
 import jces1209.vu.page.JiraTips
 import jces1209.vu.page.boards.browse.BrowseBoardsPage
-import jces1209.vu.page.boards.browse.dc.DcBrowseBoardsPage
 import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.filters.FiltersPage
-import org.openqa.selenium.JavascriptExecutor
 import java.net.URI
-import java.util.Collections
+import java.util.*
 
 class ScenarioSimilarities(
     private val jira: WebJira,
@@ -45,9 +42,11 @@ class ScenarioSimilarities(
         browseBoardsPage: BrowseBoardsPage,
         createIssue: Action,
         searchWithJql: Action,
-        browseProjects: Action
+        browseProjects: Action,
+        customizeColumns: Action
     ): List<Action> = assembleScenario(
         createIssue = createIssue,
+        customizeColums = customizeColumns,
         searchWithJql = searchWithJql,
         workAnIssue = WorkAnIssue(
             issuePage = issuePage,
@@ -96,6 +95,7 @@ class ScenarioSimilarities(
 
     private fun assembleScenario(
         createIssue: Action,
+        customizeColums: Action,
         searchWithJql: Action,
         workAnIssue: Action,
         projectSummary: Action,
@@ -108,6 +108,7 @@ class ScenarioSimilarities(
         val exploreData = listOf(browseProjects, browseFilters, browseBoards)
         val spreadOut = mapOf(
             createIssue to 0, // 5 if we can mutate data
+            customizeColums to 30,
             searchWithJql to 20,
             workAnIssue to 55,
             projectSummary to 5,

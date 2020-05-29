@@ -1,5 +1,7 @@
 package jces1209.vu.page
 
+import jces1209.vu.page.Commenting
+import jces1209.vu.page.InlineCommentForm
 import jces1209.vu.wait
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver

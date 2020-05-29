@@ -16,5 +16,7 @@ class MeasureType {
         val ISSUE_LINK_SEARCH_CHOOSE= ActionType("Link Issue(Search issue and choose)") { Unit }
         @JvmField
         val ISSUE_LINK_SUBMIT= ActionType("Link Issue(Submit)") { Unit }
+        @JvmField
+        val CUSTOMIZE_COLUMNS= ActionType("Link Issue(Submit)") { Unit }
     }
 }
