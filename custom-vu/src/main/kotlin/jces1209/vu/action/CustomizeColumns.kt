@@ -16,7 +16,7 @@ class CustomizeColumns(
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
     override fun run() {
-        jira.navigateTo("/issues/?jql=resolution = Unresolved ORDER BY priority DESC")
+        jira.goToIssueNavigator("resolution = Unresolved ORDER BY priority DESC")
         meter.measure(
             key = CUSTOMIZE_COLUMNS,
             action = {
