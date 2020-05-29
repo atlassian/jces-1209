@@ -13,7 +13,7 @@ import jces1209.vu.action.CustomizeColumns
 import jces1209.vu.action.SearchServerFilter
 import jces1209.vu.page.DcIssuePage
 import jces1209.vu.page.boards.browse.dc.DcBrowseBoardsPage
-import jces1209.vu.page.customizecolumns.DcCustomizeColumns
+import jces1209.vu.page.customizecolumns.DcColumnsEditor
 import jces1209.vu.page.filters.ServerFiltersPage
 import org.openqa.selenium.By
 import org.openqa.selenium.TakesScreenshot
@@ -63,7 +63,7 @@ class JiraDcScenario : Scenario {
             customizeColumns = CustomizeColumns(
                 jira = jira,
                 meter = meter,
-                customizeColumns = DcCustomizeColumns(jira.driver)
+                columnsEditor = DcColumnsEditor(jira.driver)
             )
         )
     }

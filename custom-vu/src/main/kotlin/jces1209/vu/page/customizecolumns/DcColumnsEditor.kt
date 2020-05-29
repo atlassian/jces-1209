@@ -1,6 +1,5 @@
 package jces1209.vu.page.customizecolumns
 
-
 import com.atlassian.performance.tools.jiraactions.api.page.wait
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
@@ -8,9 +7,9 @@ import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.ui.ExpectedConditions
 import java.time.Duration
 
-class CloudCustomizeColumns(
+class DcColumnsEditor(
     private val driver: WebDriver
-) : CustomizeColumns {
+) : ColumnsEditor {
 
     override fun openEditor() {
         driver.wait(

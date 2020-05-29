@@ -9,7 +9,7 @@ import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import jces1209.vu.action.*
 import jces1209.vu.page.CloudIssuePage
 import jces1209.vu.page.boards.browse.cloud.CloudBrowseBoardsPage
-import jces1209.vu.page.customizecolumns.CloudCustomizeColumns
+import jces1209.vu.page.customizecolumns.CloudColumnsEditor
 import jces1209.vu.page.filters.CloudFiltersPage
 import org.openqa.selenium.By
 import org.openqa.selenium.TakesScreenshot
@@ -63,7 +63,7 @@ class JiraCloudScenario : Scenario {
             customizeColumns = CustomizeColumns(
                 jira = jira,
                 meter = meter,
-                customizeColumns = CloudCustomizeColumns(jira.driver)
+                columnsEditor = CloudColumnsEditor(jira.driver)
             )
         )
     }
