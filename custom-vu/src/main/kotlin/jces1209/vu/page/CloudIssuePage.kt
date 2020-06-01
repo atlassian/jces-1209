@@ -60,12 +60,12 @@ class CloudIssuePage(
     }
 
     override fun addAttachment() {
-        val src = (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
-       val builder = Actions(driver)
+        (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
+        val builder = Actions(driver)
         builder.keyDown(Keys.CONTROL).sendKeys("v").perform()
         driver.wait(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//*[@data-test-id=" +
             "'issue.views.issue-base.content.attachment.filmstrip-panel']" +
-            "//span[contains(text(),'Attachments')])")))
+            "//*[contains(text(),'Attachments')])")))
 
     }
 

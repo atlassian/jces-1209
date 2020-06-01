@@ -5,6 +5,7 @@ import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.observation.IssuesOnBoard
+import jces1209.vu.MeasureType.Companion.ATTACH_SCREENSHOT
 import jces1209.vu.MeasureType.Companion.ISSUE_EDIT_DESCRIPTION
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK_LOAD_FORM
@@ -100,7 +101,7 @@ class WorkAnIssue(
         val attachScreenShot = issuePage.addAttachment()
         attachScreenShot.makeScreenShot()
         meter.measure(
-            key = ActionType("Attach ScreenShot") { Unit },
+            key = ATTACH_SCREENSHOT,
             action = {
                 attachScreenShot.pasteScreenShot()
                 attachScreenShot.waitForTheScreenShotAttached()
