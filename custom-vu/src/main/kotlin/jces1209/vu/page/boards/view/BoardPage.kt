@@ -1,6 +1,5 @@
 package jces1209.vu.page.boards.view
 
-import com.atlassian.performance.tools.jiraactions.api.WebJira
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import java.net.URI
@@ -16,6 +15,8 @@ abstract class BoardPage(
         return this
     }
 
+    abstract fun getTypeLabel(): String
+
     abstract fun waitForBoardPageToLoad(): BoardContent
 
     /**
@@ -23,7 +24,7 @@ abstract class BoardPage(
      */
     abstract fun previewIssue(): BoardPage
 
-    protected class GeneralBoardContent(
+    public class GeneralBoardContent(
         private val driver: WebDriver,
         private val issueSelector: By
     ) : BoardContent {

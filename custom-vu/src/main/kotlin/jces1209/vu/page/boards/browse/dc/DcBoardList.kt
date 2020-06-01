@@ -4,8 +4,10 @@ import com.atlassian.performance.tools.jiraactions.api.WebJira
 import com.atlassian.performance.tools.jiraactions.api.page.wait
 import jces1209.vu.page.boards.browse.BoardList
 import jces1209.vu.page.boards.view.BoardPage
-import jces1209.vu.page.boards.view.dc.KanbanBoardPage
-import jces1209.vu.page.boards.view.dc.ScrumBoardPage
+import jces1209.vu.page.boards.view.KanbanBoardPage
+import jces1209.vu.page.boards.view.ScrumBoardPage
+import jces1209.vu.page.boards.view.dc.DcKanbanBoardPage
+import jces1209.vu.page.boards.view.dc.DcScrumBoardPage
 import org.openqa.selenium.By
 import org.openqa.selenium.support.ui.ExpectedConditions
 import java.time.Duration
@@ -15,20 +17,20 @@ class DcBoardList(
 ) : BoardList() {
     val boardsTableSelector = By.className("boards-table")
 
-    override fun listBoards(): Map<String, Collection<BoardPage>> {
-        return mapOf(Companion.boardNameKanban to getKanbanBoards(), boardNameScrum to getScrumBoards())
+    override fun listBoards(): MixedBoards {
+        return MixedBoards(getKanbanBoards(), getScrumBoards(), emptyList())
     }
 
-    private fun getKanbanBoards(): Collection<BoardPage> =
+    private fun getKanbanBoards(): Collection<KanbanBoardPage> =
         filterAndGetBoards("type-filter-kanban")
             .map {
-                KanbanBoardPage(jira, it)
+                DcKanbanBoardPage(jira, it)
             }
 
-    private fun getScrumBoards(): Collection<BoardPage> =
+    private fun getScrumBoards(): Collection<ScrumBoardPage> =
         filterAndGetBoards("type-filter-scrum")
             .map {
-                ScrumBoardPage(jira, it)
+                DcScrumBoardPage(jira, it)
             }
 
     private fun getBoards(): Collection<String> =

@@ -8,11 +8,11 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions.and
 import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
-import java.net.URI
 
-abstract class ClassicBoardPage(
-    driver: WebDriver, uri: URI
-) : BoardPage(driver, uri) {
+class CloudClassicBoardPage(
+    private val driver: WebDriver,
+    private val issueSelector: By
+) {
 
     private val falliblePage = FalliblePage.Builder(
         webDriver = driver,
@@ -26,12 +26,12 @@ abstract class ClassicBoardPage(
         .cloudErrors()
         .build()
 
-    override fun waitForBoardPageToLoad(): BoardContent {
+    fun waitForBoardPageToLoad(): BoardContent {
         falliblePage.waitForPageToLoad()
-        return GeneralBoardContent(driver, issueSelector)
+        return BoardPage.GeneralBoardContent(driver, issueSelector)
     }
 
-    override fun previewIssue(): ClassicBoardPage {
+    fun previewIssue() {
         driver
             .wait(visibilityOfElementLocated(issueSelector))
             .click()
@@ -42,7 +42,5 @@ abstract class ClassicBoardPage(
                     visibilityOfElementLocated(By.cssSelector("[role='dialog']")),
                     visibilityOfElementLocated(By.cssSelector("[data-test-id='issue-activity-feed.heading']"))
                 ))
-
-        return this;
     }
 }
