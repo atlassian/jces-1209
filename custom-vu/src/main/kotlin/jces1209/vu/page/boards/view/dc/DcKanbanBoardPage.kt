@@ -2,6 +2,9 @@ package jces1209.vu.page.boards.view.dc
 
 import com.atlassian.performance.tools.jiraactions.api.WebJira
 import com.atlassian.performance.tools.jiraactions.api.page.wait
+import jces1209.vu.page.boards.configure.CloudConfigureBoard
+import jces1209.vu.page.boards.configure.ConfigureBoard
+import jces1209.vu.page.boards.configure.DcConfigureBoard
 import jces1209.vu.page.boards.view.BoardContent
 import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.boards.view.KanbanBoardPage
@@ -29,5 +32,9 @@ class DcKanbanBoardPage(
     override fun previewIssue(): DcKanbanBoardPage {
         dcBoardPage.previewIssue()
         return this
+    }
+
+    override fun configure(): ConfigureBoard {
+        return DcConfigureBoard(driver)
     }
 }

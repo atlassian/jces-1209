@@ -46,5 +46,8 @@ class MeasureType {
 
         @JvmField
         val SPRINT_START_SPRINT_SUBMIT = ActionType("Sprint (Start sprint (submit))") { Unit }
+
+        @JvmField
+        val CONFIGURE_BOARD = ActionType("Configure board") { Unit }
     }
 }

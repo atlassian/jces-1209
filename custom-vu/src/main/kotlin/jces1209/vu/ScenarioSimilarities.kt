@@ -83,6 +83,7 @@ class ScenarioSimilarities(
             issueKeyMemory = issueKeyMemory,
             random = seededRandom,
             viewIssueProbability = 0.50f,
+            configureBoardProbability = 0.05f,
             jiraTips = JiraTips(jira.driver)
         ),
         workOnSprint = WorkOnSprint(

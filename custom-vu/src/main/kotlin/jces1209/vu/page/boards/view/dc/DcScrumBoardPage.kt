@@ -1,9 +1,10 @@
 package jces1209.vu.page.boards.view.dc
 
 import com.atlassian.performance.tools.jiraactions.api.WebJira
+import jces1209.vu.page.boards.configure.ConfigureBoard
+import jces1209.vu.page.boards.configure.DcConfigureBoard
 import jces1209.vu.page.boards.sprint.SprintPage
 import jces1209.vu.page.boards.view.BoardContent
-import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.boards.view.ScrumBoardPage
 import jces1209.vu.page.boards.view.SprintBoardComponent
 import org.openqa.selenium.By
@@ -43,5 +44,9 @@ class DcScrumBoardPage(
     override fun goToActiveSprint(): SprintPage {
         goToBoard()
         return SprintPage(driver)
+    }
+
+    override fun configure(): ConfigureBoard {
+        return DcConfigureBoard(driver)
     }
 }

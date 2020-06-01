@@ -1,7 +1,10 @@
 package jces1209.vu.page.boards.view
 
+import jces1209.vu.page.boards.configure.ConfigureBoard
+import jces1209.vu.wait
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
+import org.openqa.selenium.support.ui.ExpectedConditions
 import java.net.URI
 
 abstract class BoardPage(
@@ -37,5 +40,19 @@ abstract class BoardPage(
 
         override fun getIssueCount(): Int = lazyIssueKeys.size
         override fun getIssueKeys(): Collection<String> = lazyIssueKeys
+    }
+
+    protected abstract fun configure(): ConfigureBoard
+
+    fun configureBoard(): ConfigureBoard {
+        driver
+            .wait(ExpectedConditions.elementToBeClickable(By.id("board-tools-section-button")))
+            .click()
+
+        driver
+            .wait(ExpectedConditions.elementToBeClickable(By.className("js-view-action-configure")))
+            .click()
+
+        return configure()
     }
 }

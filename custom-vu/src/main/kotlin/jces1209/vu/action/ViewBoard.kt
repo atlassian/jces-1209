@@ -20,6 +20,7 @@ class ViewBoard(
     private val issueKeyMemory: IssueKeyMemory,
     private val random: SeededRandom,
     private val viewIssueProbability: Float,
+    private val configureBoardProbability: Float,
     private val jiraTips: JiraTips
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
@@ -55,9 +56,19 @@ class ViewBoard(
             } else {
                 jiraTips.closeTips()
                 meter.measure(MeasureType.ISSUE_PREVIEW_BOARD) {
-                    meter.measure(ActionType("Preview issue ($boardType board)") { Unit }) {
+                    meter.measure(ActionType(MeasureType.ISSUE_PREVIEW_BOARD.label + " ($boardType board)") { Unit }) {
                         board.previewIssue()
                     }
+                }
+            }
+        }
+
+        if (random.random.nextFloat() < configureBoardProbability) {
+            meter.measure(MeasureType.CONFIGURE_BOARD) {
+                meter.measure(ActionType(MeasureType.CONFIGURE_BOARD.label + " ($boardType board)") { Unit }) {
+                    board
+                        .configureBoard()
+                        .waitForLoadPage()
                 }
             }
         }

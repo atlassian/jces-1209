@@ -1,5 +1,7 @@
 package jces1209.vu.page.boards.view.cloud
 
+import jces1209.vu.page.boards.configure.CloudConfigureBoard
+import jces1209.vu.page.boards.configure.ConfigureBoard
 import jces1209.vu.page.boards.sprint.SprintPage
 import jces1209.vu.page.boards.view.BoardContent
 import jces1209.vu.page.boards.view.ScrumBoardPage
@@ -36,5 +38,9 @@ class CloudScrumBoardPage(
     override fun goToActiveSprint(): SprintPage {
         goToBoard()
         return SprintPage(driver)
+    }
+
+    override fun configure(): ConfigureBoard {
+        return CloudConfigureBoard(driver)
     }
 }
