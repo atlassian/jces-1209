@@ -59,14 +59,8 @@ class CloudIssuePage(
         return CloudIssueLinking(driver)
     }
 
-    override fun addAttachment() {
-        (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
-        val builder = Actions(driver)
-        builder.keyDown(Keys.CONTROL).sendKeys("v").perform()
-        driver.wait(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//*[@data-test-id=" +
-            "'issue.views.issue-base.content.attachment.filmstrip-panel']" +
-            "//*[contains(text(),'Attachments')])")))
-
+    override fun addAttachment(): CloudAddScreenShot {
+        return CloudAddScreenShot(driver)
     }
 
     private fun isCommentingClassic(): Boolean = driver

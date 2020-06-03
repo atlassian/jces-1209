@@ -4,7 +4,6 @@ import com.atlassian.performance.tools.jiraactions.api.*
 import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
-import com.atlassian.performance.tools.jiraactions.api.observation.IssuesOnBoard
 import jces1209.vu.MeasureType.Companion.ATTACH_SCREENSHOT
 import jces1209.vu.MeasureType.Companion.ISSUE_EDIT_DESCRIPTION
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK
@@ -48,10 +47,14 @@ class WorkAnIssue(
         if (random.random.nextFloat() < commentProbability) {
             comment(loadedIssuePage)
         }
-        if (random.random.nextFloat() < attachScreenShotProbability) {
+        if (roll(attachScreenShotProbability)) {
             attachScreenShot(loadedIssuePage)
         }
     }
+
+    private fun roll(
+        probability: Float
+    ): Boolean = (random.random.nextFloat() < probability)
 
     private fun read(
         issueKey: String
@@ -97,6 +100,7 @@ class WorkAnIssue(
             }
         }
     }
+
     private fun attachScreenShot(issuePage: AbstractIssuePage) {
         val attachScreenShot = issuePage.addAttachment()
         attachScreenShot.makeScreenShot()

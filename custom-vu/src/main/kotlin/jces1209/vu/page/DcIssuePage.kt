@@ -2,10 +2,12 @@ package jces1209.vu.page
 
 import com.atlassian.performance.tools.jiraactions.api.page.JiraErrors
 import jces1209.vu.wait
-import org.openqa.selenium.*
+import org.openqa.selenium.By
+import org.openqa.selenium.WebDriver
 import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.ExpectedConditions.*
+import org.openqa.selenium.support.ui.ExpectedConditions.or
+import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
 
 class DcIssuePage(
     private val driver: WebDriver
@@ -53,15 +55,10 @@ class DcIssuePage(
         return this
     }
 
-    override fun addAttachment() {
-        val src = (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
-        val builder = Actions(driver)
-        builder.keyDown(Keys.CONTROL).sendKeys("v").perform()
-        driver.wait(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//*[@data-test-id=" +
-            "'issue.views.issue-base.content.attachment.filmstrip-panel']" +
-            "//span[contains(text(),'Attachments')])")))
-
+    override fun addAttachment(): DcAddScreenShot {
+        return DcAddScreenShot(driver)
     }
+
     override fun linkIssue(): DcIssueLinking {
         return DcIssueLinking(driver)
     }
