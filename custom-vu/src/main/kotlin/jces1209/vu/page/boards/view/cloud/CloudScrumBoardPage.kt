@@ -23,6 +23,10 @@ class CloudScrumBoardPage(
         return this
     }
 
+    override fun closePreviewIssue() {
+        cloudClassicBoardPage.closePreviewIssue()
+    }
+
     override fun goToBacklog(): SprintBoardComponent {
         driver.navigate().to(
             URI(

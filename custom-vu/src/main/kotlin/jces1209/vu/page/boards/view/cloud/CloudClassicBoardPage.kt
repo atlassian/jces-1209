@@ -6,8 +6,8 @@ import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.wait
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.support.ui.ExpectedConditions.and
-import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
+import org.openqa.selenium.support.ui.ExpectedConditions.*
+import java.time.Duration
 
 class CloudClassicBoardPage(
     private val driver: WebDriver,
@@ -42,5 +42,13 @@ class CloudClassicBoardPage(
                     visibilityOfElementLocated(By.cssSelector("[role='dialog']")),
                     visibilityOfElementLocated(By.cssSelector("[data-test-id='issue-activity-feed.heading']"))
                 ))
+    }
+
+    fun closePreviewIssue() {
+        val closeButton = driver
+            .wait(elementToBeClickable(By.cssSelector("[aria-label='Close']")))
+        closeButton.click()
+
+        driver.wait(invisibilityOf(closeButton))
     }
 }

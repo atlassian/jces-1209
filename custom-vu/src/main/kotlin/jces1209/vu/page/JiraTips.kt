@@ -12,10 +12,20 @@ class JiraTips(
     fun closeTips() {
         driver
             .findElements(By.className("jira-help-tip"))
-            .stream()
+            .filter { it.isDisplayed }
             .forEach {
                 it
                     .findElement(By.className("helptip-close"))
+                    .click()
+                driver.wait(ExpectedConditions.invisibilityOf(it))
+            }
+        driver
+            .findElements(By.cssSelector("[role='dialog']"))
+            .filter { it.isDisplayed }
+            .forEach {
+                it
+                    .findElement(By.tagName("footer"))
+                    .findElement(By.tagName("button"))
                     .click()
                 driver.wait(ExpectedConditions.invisibilityOf(it))
             }

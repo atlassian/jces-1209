@@ -78,13 +78,14 @@ class ScenarioSimilarities(
             boardsMemory = boardsMemory
         ),
         viewBoard = ViewBoard(
+            driver = jira.driver,
             meter = meter,
             boardsMemory = boardsMemory.all,
             issueKeyMemory = issueKeyMemory,
             random = seededRandom,
             viewIssueProbability = 0.50f,
             configureBoardProbability = 0.05f,
-            jiraTips = JiraTips(jira.driver)
+            contextOperationProbability = 0.05f
         ),
         workOnSprint = WorkOnSprint(
             meter = meter,

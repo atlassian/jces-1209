@@ -7,8 +7,7 @@ import jces1209.vu.wait
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
-import org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated
-import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
+import org.openqa.selenium.support.ui.ExpectedConditions.*
 import java.time.Duration
 
 class DcBoardPage(
@@ -38,5 +37,13 @@ class DcBoardPage(
                     visibilityOfElementLocated(By.id("ghx-detail-issue")),
                     visibilityOfElementLocated(By.className("issue-drop-zone"))
                 ))
+    }
+
+    fun closePreviewIssue() {
+        val closeButton = driver
+            .wait(elementToBeClickable(By.className("aui-iconfont-close-dialog")))
+        closeButton.click()
+
+        driver.wait(invisibilityOf(closeButton))
     }
 }

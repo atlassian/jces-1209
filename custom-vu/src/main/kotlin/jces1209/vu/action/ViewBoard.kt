@@ -9,19 +9,22 @@ import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.observation.IssuesOnBoard
 import jces1209.vu.MeasureType
 import jces1209.vu.memory.SeededMemory
+import jces1209.vu.page.ContextOperation
 import jces1209.vu.page.JiraTips
 import jces1209.vu.page.boards.view.BoardPage
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import org.openqa.selenium.WebDriver
 
 class ViewBoard(
+    private val driver: WebDriver,
     private val meter: ActionMeter,
     private val boardsMemory: SeededMemory<BoardPage>,
     private val issueKeyMemory: IssueKeyMemory,
     private val random: SeededRandom,
     private val viewIssueProbability: Float,
     private val configureBoardProbability: Float,
-    private val jiraTips: JiraTips
+    private val contextOperationProbability: Float
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
@@ -50,15 +53,30 @@ class ViewBoard(
             }
         )
 
+
         if (random.random.nextFloat() < viewIssueProbability) {
             if (boardContent.getIssueKeys().isEmpty()) {
                 logger.debug("It requires some issues on board to test preview issue")
             } else {
+                val jiraTips = JiraTips(driver)
                 jiraTips.closeTips()
                 meter.measure(MeasureType.ISSUE_PREVIEW_BOARD) {
                     meter.measure(ActionType(MeasureType.ISSUE_PREVIEW_BOARD.label + " ($boardType board)") { Unit }) {
                         board.previewIssue()
                     }
+                }
+                board.closePreviewIssue()
+
+                if (random.random.nextFloat() < contextOperationProbability) {
+                    jiraTips.closeTips()
+                    val contextOperation = ContextOperation(driver)
+                    meter.measure(MeasureType.CONTEXT_OPERATION_BOARD) {
+                        meter.measure(ActionType("Context operation ($boardType board)") { Unit }) {
+                            contextOperation.openContextOperation()
+                        }
+                    }
+
+                    contextOperation.close()
                 }
             }
         }

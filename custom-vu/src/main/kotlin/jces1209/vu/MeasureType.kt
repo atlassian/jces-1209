@@ -6,6 +6,9 @@ class MeasureType {
 
     companion object {
         @JvmField
+        val CONTEXT_OPERATION_BOARD = ActionType("Context operation (Board)") { Unit }
+
+        @JvmField
         val CUSTOMIZE_COLUMNS= ActionType("Customize columns") { Unit }
 
         @JvmField

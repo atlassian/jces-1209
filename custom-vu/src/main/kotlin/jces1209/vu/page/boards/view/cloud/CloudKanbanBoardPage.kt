@@ -6,6 +6,7 @@ import jces1209.vu.page.boards.configure.DcConfigureBoard
 import jces1209.vu.page.boards.view.BoardContent
 import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.boards.view.KanbanBoardPage
+import jces1209.vu.page.boards.view.dc.DcKanbanBoardPage
 import org.openqa.selenium.WebDriver
 import java.net.URI
 
@@ -21,6 +22,10 @@ class CloudKanbanBoardPage(
     override fun previewIssue(): CloudKanbanBoardPage {
         cloudClassicBoardPage.previewIssue()
         return this
+    }
+
+    override fun closePreviewIssue() {
+        cloudClassicBoardPage.closePreviewIssue()
     }
 
     override fun configure(): ConfigureBoard {

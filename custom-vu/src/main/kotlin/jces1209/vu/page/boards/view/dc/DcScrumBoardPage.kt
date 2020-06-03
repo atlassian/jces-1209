@@ -17,7 +17,7 @@ class DcScrumBoardPage(
     driver = jira.driver,
     uri = jira.base.resolve("secure/RapidBoard.jspa?rapidView=$boardId")
 ) {
-    override val issueSelector = By.className("ghx-issue-compact")
+    override val issueSelector = By.className("js-issue")
     private val dcBoardPage = DcBoardPage(driver, issueSelector)
 
     override fun waitForBoardPageToLoad(): BoardContent {
@@ -27,6 +27,10 @@ class DcScrumBoardPage(
     override fun previewIssue(): DcScrumBoardPage {
         dcBoardPage.previewIssue()
         return this
+    }
+
+    override fun closePreviewIssue() {
+        dcBoardPage.closePreviewIssue()
     }
 
     override fun goToBacklog(): SprintBoardComponent {

@@ -26,6 +26,7 @@ abstract class BoardPage(
      * Board must have issues
      */
     abstract fun previewIssue(): BoardPage
+    abstract fun closePreviewIssue()
 
     public class GeneralBoardContent(
         private val driver: WebDriver,

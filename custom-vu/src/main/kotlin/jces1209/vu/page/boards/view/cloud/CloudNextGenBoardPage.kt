@@ -4,7 +4,6 @@ import jces1209.vu.page.FalliblePage
 import jces1209.vu.page.boards.configure.CloudConfigureBoard
 import jces1209.vu.page.boards.configure.ConfigureBoard
 import jces1209.vu.page.boards.view.BoardContent
-import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.boards.view.NextGenBoardPage
 import jces1209.vu.wait
 import org.openqa.selenium.By
@@ -53,6 +52,10 @@ class CloudNextGenBoardPage(
                 ))
 
         return this;
+    }
+
+    override fun closePreviewIssue() {
+        CloudClassicBoardPage(driver, issueSelector).closePreviewIssue()
     }
 
     override fun configure(): ConfigureBoard {
