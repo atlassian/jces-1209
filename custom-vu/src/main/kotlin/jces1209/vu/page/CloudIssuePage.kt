@@ -1,5 +1,7 @@
 package jces1209.vu.page
 
+import jces1209.vu.page.contextoperation.ContextOperation
+import jces1209.vu.page.contextoperation.ContextOperationIssue
 import jces1209.vu.wait
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -91,6 +93,10 @@ class CloudIssuePage(
         )
 
         return this;
+    }
+
+    override fun contextOperation(): ContextOperationIssue {
+        return ContextOperationIssue(driver)
     }
 
     private fun isCommentingClassic(): Boolean = driver

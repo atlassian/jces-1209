@@ -9,6 +9,9 @@ class MeasureType {
         val CONTEXT_OPERATION_BOARD = ActionType("Context operation (Board)") { Unit }
 
         @JvmField
+        val CONTEXT_OPERATION_ISSUE = ActionType("Context operation (Issue)") { Unit }
+
+        @JvmField
         val CUSTOMIZE_COLUMNS= ActionType("Customize columns") { Unit }
 
         @JvmField

@@ -1,6 +1,8 @@
 package jces1209.vu.page
 
 import com.atlassian.performance.tools.jiraactions.api.page.JiraErrors
+import jces1209.vu.page.contextoperation.ContextOperation
+import jces1209.vu.page.contextoperation.ContextOperationIssue
 import jces1209.vu.wait
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -124,5 +126,9 @@ class DcIssuePage(
         )
 
         return this;
+    }
+
+    override fun contextOperation(): ContextOperationIssue {
+        return ContextOperationIssue(driver)
     }
 }

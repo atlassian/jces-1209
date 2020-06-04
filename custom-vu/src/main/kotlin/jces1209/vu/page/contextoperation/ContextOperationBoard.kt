@@ -1,4 +1,4 @@
-package jces1209.vu.page
+package jces1209.vu.page.contextoperation
 
 import jces1209.vu.wait
 import org.openqa.selenium.By
@@ -7,12 +7,12 @@ import org.openqa.selenium.interactions.Actions
 import org.openqa.selenium.support.ui.ExpectedConditions.and
 import org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated
 
-class ContextOperation(
+class ContextOperationBoard(
     private val driver: WebDriver
-) {
+): ContextOperation {
     private val closeButtonLocator = By.id("aui-dialog-close")
 
-    fun openContextOperation() {
+    override fun open(): ContextOperationBoard {
         Actions(driver)
             .sendKeys(".")
             .perform()
@@ -23,9 +23,10 @@ class ContextOperation(
                 visibilityOfElementLocated(By.id("issueactions-queryable-container")),
                 visibilityOfElementLocated(closeButtonLocator)
             ))
+        return this
     }
 
-    fun close() {
+    override fun close() {
         driver
             .findElement(closeButtonLocator)
             .click()

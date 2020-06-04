@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.*
 import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
+import jces1209.vu.MeasureType.Companion.CONTEXT_OPERATION_ISSUE
 import jces1209.vu.MeasureType.Companion.ISSUE_EDIT_DESCRIPTION
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK_LOAD_FORM
@@ -26,7 +27,8 @@ class WorkAnIssue(
     private val commentProbability: Float,
     private val linkIssueProbability: Float,
     private val changeAssigneeProbability: Float,
-    private val mentionUserProbability: Float
+    private val mentionUserProbability: Float,
+    private val contextOperationProbability: Float
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
@@ -52,6 +54,9 @@ class WorkAnIssue(
         }
         if (random.random.nextFloat() < mentionUserProbability) {
             mentionUser(loadedIssuePage)
+        }
+        if (random.random.nextFloat() < contextOperationProbability) {
+            contextOperation(loadedIssuePage)
         }
     }
 
@@ -117,5 +122,14 @@ class WorkAnIssue(
         meter.measure(ActionType("Change Assignee") { Unit }) {
             issuePage.changeAssignee()
         }
+    }
+
+    private fun contextOperation(issuePage: AbstractIssuePage) {
+        meter.measure(CONTEXT_OPERATION_ISSUE) {
+            issuePage
+                .contextOperation()
+                .open()
+        }
+            .close()
     }
 }
