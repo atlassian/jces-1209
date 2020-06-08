@@ -11,7 +11,7 @@ abstract class AttachScreenShot(
     protected val driver: WebDriver
 ) {
     protected var countBefore: Int = 0
-    abstract val screenShotLocator: String
+    abstract val screenShotXPath: String
 
     fun makeScreenShot() {
         (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)

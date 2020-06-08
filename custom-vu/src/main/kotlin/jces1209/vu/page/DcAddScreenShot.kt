@@ -10,10 +10,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 class DcAddScreenShot(
     driver: WebDriver
 ) : AttachScreenShot(driver) {
-    override var screenShotLocator: String = "(//*[@class='attachment-thumb])"
+    override var screenShotXPath: String = "(//*[@class='attachment-thumb])"
 
     override fun pasteScreenShot() {
-        countBefore = getIssueScreenShotsCount(By.xpath(screenShotLocator))
+        countBefore = getIssueScreenShotsCount(By.xpath(screenShotXPath))
         Actions(driver).keyDown(Keys.CONTROL).sendKeys("v").perform()
         driver.wait(
             ExpectedConditions.elementToBeClickable(
@@ -23,9 +23,9 @@ class DcAddScreenShot(
 
     override fun waitForTheScreenShotAttached() {
         driver.wait(ExpectedConditions.numberOfElementsToBeMoreThan(
-            By.xpath(screenShotLocator), countBefore))
+            By.xpath(screenShotXPath), countBefore))
         driver.wait(ExpectedConditions.visibilityOfAllElementsLocatedBy(
-            By.xpath(screenShotLocator)))
+            By.xpath(screenShotXPath)))
         waitForAttributeValueForElements(By.xpath(
             "//*[@data-testid='media-file-card-view']"),
             "data-test-status",
