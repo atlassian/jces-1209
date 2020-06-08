@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 class CloudAddScreenShot(
     driver: WebDriver
 ) : AttachScreenShot(driver) {
-    override var screenShotLocator: String = "(//*[contains(@class,'overlay image persistent sc-lbihag')])"
+    override var screenShotLocator: String = "(//*[contains(@class,'overlay image persistent')])"
     override fun pasteScreenShot() {
         countBefore = getIssueScreenShotsCount(By.xpath(screenShotLocator))
         Actions(driver).keyDown(Keys.CONTROL).sendKeys("v").perform()
