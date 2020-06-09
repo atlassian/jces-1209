@@ -8,18 +8,18 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 abstract class AttachScreenShot(
-    protected val driver: WebDriver
-) {
+    protected val driver: WebDriver,
     protected var countBefore: Int = 0
+) {
     abstract val screenShotLocator: By
 
     fun makeScreenShot() {
         (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
     }
 
-    abstract fun pasteScreenShot(): Int
+    abstract fun pasteScreenShot()
 
-    protected fun waitForAttributeValueForElements(by: By, attributeName: String, attributeValue: String, screenShotsCountBefore: Int) {
+    protected fun waitForAttributeValueForElements(by: By, attributeName: String, attributeValue: String) {
         driver
             .findElements(by)
             .forEach {
@@ -27,7 +27,7 @@ abstract class AttachScreenShot(
             }
     }
 
-    protected fun getIssueScreenShotsCount(by: By): Int {
-        return driver.findElements(by).size
+    protected fun getScreenShotsCount(): Int {
+        return driver.findElements(screenShotLocator).size
     }
 }
