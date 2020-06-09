@@ -11,18 +11,27 @@ import java.time.Duration
 
 class CloudClassicBoardPage(
     private val driver: WebDriver,
-    private val issueSelector: By
+    private val issueSelector: By,
+    private val waitBoardSelectors: List<By>
 ) {
+    constructor(
+        driver: WebDriver,
+        issueSelector: By
+    ) : this(
+        driver,
+        issueSelector,
+        listOf(issueSelector)
+    )
 
     private val falliblePage = FalliblePage.Builder(
         webDriver = driver,
         expectedContent = listOf(
             By.xpath("//*[contains(text(), 'Your board has too many issues')]"),
             By.xpath("//*[contains(text(), 'Board not accessible')]"),
-            By.xpath("//*[contains(text(), 'Set a new location for your board')]"),
-            By.cssSelector(".ghx-column")
-        )
+            By.xpath("//*[contains(text(), 'Set a new location for your board')]")
+        ) + waitBoardSelectors
     )
+        .timeout(Duration.ofSeconds(25))
         .cloudErrors()
         .build()
 

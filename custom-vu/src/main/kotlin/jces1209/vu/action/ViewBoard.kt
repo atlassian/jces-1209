@@ -47,6 +47,7 @@ class ViewBoard(
                 contextOperation(boardType)
             }
         }
+        jiraTips.closeTips()
         configureBoard(boardType, board)
     }
 

@@ -3,7 +3,8 @@ package jces1209.vu.page.boards.browse.cloud
 import jces1209.vu.page.boards.browse.BoardList
 import jces1209.vu.page.boards.view.cloud.CloudKanbanBoardPage
 import jces1209.vu.page.boards.view.cloud.CloudNextGenBoardPage
-import jces1209.vu.page.boards.view.cloud.CloudScrumBoardPage
+import jces1209.vu.page.boards.view.cloud.CloudScrumBacklogPage
+import jces1209.vu.page.boards.view.cloud.CloudScrumSprintPage
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
@@ -21,7 +22,8 @@ class CloudBoardList(
         val nameColumnIndex = columnNames.indexOf("Name")
         val typeColumnIndex = columnNames.indexOf("Type")
         val kanbanBoards = mutableListOf<CloudKanbanBoardPage>()
-        val scrumBoards = mutableListOf<CloudScrumBoardPage>()
+        val backlogBoards = mutableListOf<CloudScrumBacklogPage>()
+        val sprintBoards = mutableListOf<CloudScrumSprintPage>()
         val nextGenBoards = mutableListOf<CloudNextGenBoardPage>()
         element
             .findElements(By.cssSelector("tbody tr"))
@@ -29,14 +31,17 @@ class CloudBoardList(
             .forEach { cells ->
                 val type = cells[typeColumnIndex]!!.text.trim()
                 val name = cells[nameColumnIndex]!!
-                val uri = name.findElement(By.tagName("a")).getAttribute("href").let { URI(it) }
+                val uri = name.findElement(By.tagName("a")).getAttribute("href").let { it.removeSuffix("&useStoredSettings=true") }
                 when (type) {
-                    "Kanban" -> kanbanBoards.add(CloudKanbanBoardPage(driver, uri))
-                    "Scrum" -> scrumBoards.add(CloudScrumBoardPage(driver, uri))
-                    "Next-gen" -> nextGenBoards.add(CloudNextGenBoardPage(driver, uri))
+                    "Kanban" -> kanbanBoards.add(CloudKanbanBoardPage(driver, URI(uri)))
+                    "Scrum" -> {
+                        backlogBoards.add(CloudScrumBacklogPage(driver, URI("$uri&view=planning&issueLimit=100")))
+                        sprintBoards.add(CloudScrumSprintPage(driver, URI(uri)))
+                    }
+                    "Next-gen" -> nextGenBoards.add(CloudNextGenBoardPage(driver, URI(uri)))
                     else -> throw Exception("Unknown board type: $type")
                 }
             }
-        return MixedBoards(kanbanBoards, scrumBoards, nextGenBoards)
+        return MixedBoards(kanbanBoards, backlogBoards, sprintBoards, nextGenBoards)
     }
 }

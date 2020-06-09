@@ -17,7 +17,7 @@ class DcBoardPage(
     fun waitForBoardPageToLoad(): BoardContent {
         FalliblePage.Builder(
             driver,
-            presenceOfElementLocated(issueSelector)
+            listOf(issueSelector, By.id("ghx-column-headers"))
         )
             .timeout(Duration.ofSeconds(30))
             .serverErrors()

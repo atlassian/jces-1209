@@ -90,7 +90,8 @@ class ScenarioSimilarities(
         ),
         workOnSprint = WorkOnSprint(
             meter = meter,
-            scrumBoardsMemory = boardsMemory.scrum,
+            backlogsMemory = boardsMemory.backlog,
+            sprintsMemory = boardsMemory.sprint,
             jiraTips = JiraTips(jira.driver)
         )
     )

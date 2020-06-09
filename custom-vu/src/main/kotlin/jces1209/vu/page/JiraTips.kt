@@ -25,7 +25,26 @@ class JiraTips(
             .forEach {
                 it
                     .findElement(By.tagName("footer"))
-                    .findElement(By.tagName("button"))
+                    .findElements(By.tagName("button"))
+                    .last { button -> null == button.getAttribute("disabled") }
+                    .click()
+                driver.wait(ExpectedConditions.invisibilityOf(it))
+            }
+        driver
+            .findElements(By.id("aui-flag-container"))
+            .filter { it.isDisplayed }
+            .forEach {
+                it
+                    .findElement(By.className("icon-close"))
+                    .click()
+                driver.wait(ExpectedConditions.invisibilityOf(it))
+            }
+        driver
+            .findElements(By.className("aui-inline-dialog-contents"))
+            .filter { it.isDisplayed }
+            .forEach {
+                it
+                    .findElement(By.className("ee-action-dismiss"))
                     .click()
                 driver.wait(ExpectedConditions.invisibilityOf(it))
             }

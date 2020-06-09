@@ -5,94 +5,114 @@ import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import jces1209.vu.MeasureType
 import jces1209.vu.memory.SeededMemory
 import jces1209.vu.page.JiraTips
-import jces1209.vu.page.boards.sprint.SprintPage
-import jces1209.vu.page.boards.view.ScrumBoardPage
-import jces1209.vu.page.boards.view.SprintBoardComponent
+import jces1209.vu.page.boards.view.ScrumBacklogPage
+import jces1209.vu.page.boards.view.ScrumSprintPage
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class WorkOnSprint(
     private val meter: ActionMeter,
     private val jiraTips: JiraTips,
-    private val scrumBoardsMemory: SeededMemory<ScrumBoardPage>
+    private val backlogsMemory: SeededMemory<ScrumBacklogPage>,
+    private val sprintsMemory: SeededMemory<ScrumSprintPage>
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
     override fun run() {
-        val scrumBoard = scrumBoardsMemory.recall()
-        if (scrumBoard == null) {
-            logger.debug("I cannot recall scrum board, skipping...")
+        workOnBacklog()
+
+        workOnSprintPage()
+    }
+
+    private fun workOnSprintPage() {
+        val sprint = sprintsMemory.recall()
+        if (sprint == null) {
+            logger.debug("I cannot recall active sprint board, skipping...")
             return
         }
 
-        val sprintBoardComponent = scrumBoard.goToBacklog()
-        createSprint(sprintBoardComponent)
+        sprint
+            .goToBoard()
+            .waitForBoardPageToLoad()
+
+        if (sprint.maxColumnIssuesNumber() > 1) {
+            reorderIssue(sprint)
+        } else {
+            logger.debug("Scrum backlog doesn't contain enough issues to make reorder")
+        }
+
+        if (sprint.isCompleteButtonPresent()) {
+            completeSprint(sprint)
+        } else {
+            logger.debug("Scrum backlog doesn't contain sprint which is ready to be completed")
+        }
+    }
+
+    private fun workOnBacklog(): Boolean {
+        val backlog = backlogsMemory.recall()
+        if (backlog == null) {
+            logger.debug("I cannot recall backlog, skipping...")
+            return true
+        }
+
+        backlog
+            .goToBoard()
+            .waitForBoardPageToLoad()
+        createSprint(backlog)
 
         jiraTips.closeTips()
-        if (sprintBoardComponent.backlogIssuesNumber() > 0) {
-            moveIssuesToSprint(sprintBoardComponent)
+        if (backlog.backlogIssuesNumber() > 0) {
+            moveIssuesToSprint(backlog)
 
-            if (sprintBoardComponent.isStartSprintEnabled()) {
-                startSprint(sprintBoardComponent)
+            if (backlog.isStartSprintEnabled()) {
+                startSprint(backlog)
             } else {
                 logger.debug("Can't start sprint - the option is disabled")
             }
         } else {
             logger.debug("Scrum backlog doesn't contain issues in backlog")
         }
-
-        val sprintPage = scrumBoard.goToActiveSprint()
-
-        if (sprintPage.maxColumnIssuesNumber() > 1) {
-            reorderIssue(sprintPage)
-        } else {
-            logger.debug("Scrum backlog doesn't contain enough issues to make reorder")
-        }
-
-        if (sprintPage.isCompleteButtonPresent()) {
-            completeSprint(sprintPage)
-        } else {
-            logger.debug("Scrum backlog doesn't contain sprint which is ready to be completed")
-        }
+        return false
     }
 
-    private fun completeSprint(sprintPage: SprintPage) {
+    private fun completeSprint(sprint: ScrumSprintPage) {
         meter.measure(MeasureType.SPRINT_COMPLETE) {
-            sprintPage.completeSprint()
+            sprint.completeSprint()
         }
     }
 
-    private fun reorderIssue(sprintPage: SprintPage) {
+    private fun reorderIssue(sprint: ScrumSprintPage) {
         meter.measure(MeasureType.SPRINT_REORDER_ISSUE) {
-            sprintPage.reorderIssue()
+            sprint.reorderIssue()
         }
     }
 
-    private fun startSprint(sprintBoardComponent: SprintBoardComponent) {
+    private fun startSprint(backlog: ScrumBacklogPage) {
         meter.measure(MeasureType.SPRINT_START_SPRINT) {
             meter.measure(MeasureType.SPRINT_START_SPRINT_EDITOR) {
-                sprintBoardComponent.openStartSprintPopUp()
+                backlog.openStartSprintPopUp()
             }
             meter.measure(MeasureType.SPRINT_START_SPRINT_SUBMIT) {
-                sprintBoardComponent.submitStartSprint()
+                backlog.submitStartSprint()
             }
         }
     }
 
-    private fun moveIssuesToSprint(sprintBoardComponent: SprintBoardComponent) {
+    private fun moveIssuesToSprint(backlog: ScrumBacklogPage) {
         meter.measure(MeasureType.SPRINT_MOVE_ISSUE) {
-            sprintBoardComponent.moveIssueToSprint()
+            backlog.moveIssueToSprint()
         }
 
         // Move additional times for reordering
         repeat(10) {
-            sprintBoardComponent.moveIssueToSprint()
+            backlog.moveIssueToSprint()
         }
     }
 
-    private fun createSprint(sprintBoardComponent: SprintBoardComponent) {
+    private fun createSprint(backlog: ScrumBacklogPage) {
+        jiraTips.closeTips()
         meter.measure(MeasureType.SPRINT_CREATE) {
-            sprintBoardComponent.createSprint()
+            backlog.createSprint()
         }
     }
 }

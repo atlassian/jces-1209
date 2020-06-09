@@ -1,9 +1,9 @@
 package jces1209.vu.page.boards.browse
 
-import jces1209.vu.page.boards.view.BoardPage
 import jces1209.vu.page.boards.view.KanbanBoardPage
 import jces1209.vu.page.boards.view.NextGenBoardPage
-import jces1209.vu.page.boards.view.ScrumBoardPage
+import jces1209.vu.page.boards.view.ScrumBacklogPage
+import jces1209.vu.page.boards.view.ScrumSprintPage
 
 abstract class BoardList {
 
@@ -11,7 +11,8 @@ abstract class BoardList {
 
     class MixedBoards(
         val kanban: Collection<KanbanBoardPage>,
-        val scrum: Collection<ScrumBoardPage>,
+        val backlog: Collection<ScrumBacklogPage>,
+        val sprint: Collection<ScrumSprintPage>,
         val nextGen: Collection<NextGenBoardPage>
     )
 }
