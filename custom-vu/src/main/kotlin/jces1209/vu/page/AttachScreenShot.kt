@@ -8,8 +8,7 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
 
 abstract class AttachScreenShot(
-    protected val driver: WebDriver,
-    protected var countBefore: Int = 0
+    protected val driver: WebDriver
 ) {
     abstract val screenShotLocator: By
 
