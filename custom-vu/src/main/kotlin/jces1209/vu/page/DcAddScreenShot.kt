@@ -10,25 +10,23 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 class DcAddScreenShot(
     driver: WebDriver
 ) : AttachScreenShot(driver) {
-    override var screenShotXPath: String = "(//*[@class='attachment-thumb])"
-
-    override fun pasteScreenShot() {
-        countBefore = getIssueScreenShotsCount(By.xpath(screenShotXPath))
+    override var screenShotLocator = By.xpath("(//*[@class='attachment-thumb])")
+    override fun pasteScreenShot(): Int {
+        countBefore = getIssueScreenShotsCount(screenShotLocator)
         Actions(driver).keyDown(Keys.CONTROL).sendKeys("v").perform()
         driver.wait(
             ExpectedConditions.elementToBeClickable(
                 By.className("aui-button aui-button-primary")))
             .click()
-    }
-
-    override fun waitForTheScreenShotAttached() {
+        driver.wait(
+            ExpectedConditions.invisibilityOfElementLocated(By.id("attach-screenshot-dialog")))
         driver.wait(ExpectedConditions.numberOfElementsToBeMoreThan(
-            By.xpath(screenShotXPath), countBefore))
+            screenShotLocator, countBefore))
         driver.wait(ExpectedConditions.visibilityOfAllElementsLocatedBy(
-            By.xpath(screenShotXPath)))
-        waitForAttributeValueForElements(By.xpath(
-            "//*[@data-testid='media-file-card-view']"),
-            "data-test-status",
-            "complete")
+            screenShotLocator))
+        waitForAttributeValueForElements(By.xpath("//*[contains(@class,'js-file-attachment')]"),
+            "data-attachment-thumbnail",
+            "true", countBefore)
+        return getIssueScreenShotsCount(screenShotLocator)
     }
 }

@@ -104,10 +104,8 @@ class WorkAnIssue(
     private fun attachScreenShot(issuePage: AbstractIssuePage) {
         val attachScreenShot = issuePage.addAttachment()
         attachScreenShot.makeScreenShot()
-        meter.measure(ATTACH_SCREENSHOT)
-        {
+        meter.measure(ATTACH_SCREENSHOT) {
             attachScreenShot.pasteScreenShot()
-            attachScreenShot.waitForTheScreenShotAttached()
         }
     }
 }

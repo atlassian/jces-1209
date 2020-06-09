@@ -10,15 +10,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions
 class CloudAddScreenShot(
     driver: WebDriver
 ) : AttachScreenShot(driver) {
-    override var screenShotXPath: String = "(//*[contains(@class,'overlay image persistent')])"
-    override fun pasteScreenShot() {
-        countBefore = getIssueScreenShotsCount(By.xpath(screenShotXPath))
+    override var screenShotLocator = By.xpath("(//*[contains(@class,'overlay image persistent')])")
+    override fun pasteScreenShot(): Int {
+        countBefore = getIssueScreenShotsCount(screenShotLocator)
         Actions(driver).keyDown(Keys.CONTROL).sendKeys("v").perform()
-    }
-
-    override fun waitForTheScreenShotAttached() {
         driver.wait(ExpectedConditions.numberOfElementsToBeMoreThan(
-            By.xpath(screenShotXPath), countBefore))
+            screenShotLocator, countBefore))
         driver.wait(ExpectedConditions.visibilityOfAllElementsLocatedBy(
             By.xpath("(//*[@data-test-id=" +
                 "'issue.views.issue-base.content.attachment.filmstrip-panel']" +
@@ -26,6 +23,7 @@ class CloudAddScreenShot(
         waitForAttributeValueForElements(By.xpath(
             "//*[@data-testid='media-file-card-view']"),
             "data-test-status",
-            "complete")
+            "complete", countBefore)
+        return getIssueScreenShotsCount(screenShotLocator)
     }
 }

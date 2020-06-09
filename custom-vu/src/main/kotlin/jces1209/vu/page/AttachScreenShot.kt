@@ -11,20 +11,20 @@ abstract class AttachScreenShot(
     protected val driver: WebDriver
 ) {
     protected var countBefore: Int = 0
-    abstract val screenShotXPath: String
+    abstract val screenShotLocator: By
 
     fun makeScreenShot() {
         (driver as TakesScreenshot).getScreenshotAs(OutputType.BYTES)
     }
 
-    abstract fun pasteScreenShot()
-    abstract fun waitForTheScreenShotAttached()
+    abstract fun pasteScreenShot(): Int
 
-    protected fun waitForAttributeValueForElements(by: By, attribute: String, expected: String) {
-        val elements = driver.findElements(by)
-        elements.forEach {
-            driver.wait(ExpectedConditions.attributeContains(it, attribute, expected))
-        }
+    protected fun waitForAttributeValueForElements(by: By, attributeName: String, attributeValue: String, screenShotsCountBefore: Int) {
+        driver
+            .findElements(by)
+            .forEach {
+                driver.wait(ExpectedConditions.attributeContains(it, attributeName, attributeValue))
+            }
     }
 
     protected fun getIssueScreenShotsCount(by: By): Int {
