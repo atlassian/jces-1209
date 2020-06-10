@@ -11,7 +11,10 @@ import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import jces1209.vu.action.CreateAnIssue
 import jces1209.vu.action.CustomizeColumns
 import jces1209.vu.action.SearchServerFilter
+import jces1209.vu.page.DcIssueNavigator
+import jces1209.vu.action.WorkOnTopBar
 import jces1209.vu.page.DcIssuePage
+import jces1209.vu.page.bars.topBar.dc.DcTopBar
 import jces1209.vu.page.boards.browse.dc.DcBrowseBoardsPage
 import jces1209.vu.page.customizecolumns.DcColumnsEditor
 import jces1209.vu.page.filters.ServerFiltersPage
@@ -64,7 +67,9 @@ class JiraDcScenario : Scenario {
                 jira = jira,
                 meter = meter,
                 columnsEditor = DcColumnsEditor(jira.driver)
-            )
+            ),
+            issueNavigator = DcIssueNavigator(jira.driver),
+            topBar = DcTopBar(jira.driver)
         )
     }
 }
