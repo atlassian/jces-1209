@@ -22,8 +22,8 @@ class WorkOnDashboard(
     private val logger: Logger = LogManager.getLogger(this::class.java)
     override fun run() {
         viewDashboards()
-        createDashboard()
-        createGadget(dashboardPage)
+        val dashboardName = createDashboard()
+        createGadget(dashboardPage, dashboardName)
         openDashboard(dashboardPage)
     }
 
@@ -42,8 +42,8 @@ class WorkOnDashboard(
         return dashboardPage
     }
 
-    private fun createDashboard() {
-        meter.measure(
+    private fun createDashboard(): String {
+        return meter.measure(
             key = CREATE_DASHBOARD,
             action = {
                 dashboardPage.createDashboard()
@@ -51,13 +51,13 @@ class WorkOnDashboard(
         )
     }
 
-    private fun createGadget(dashboard: DashboardPage) {
+    private fun createGadget(dashboard: DashboardPage, dashboardName: String) {
         val projectKey = projectKeyMemory.recall()
         if (projectKey == null) {
             logger.debug("I don't recall any project keys. Maybe next time I will.")
             return
         }
-
+        dashboard.selectDashboardIfPresent(dashboardName)
         meter.measure(
             key = CREATE_GADGET,
             action = {
@@ -67,7 +67,9 @@ class WorkOnDashboard(
     }
 
     private fun openDashboard(dashboard: DashboardPage) {
-        openDashboardsPage().waitForDashboards()
+        openDashboardsPage()
+            .waitForDashboards()
+            .clickPopularIfPresent()
         meter.measure(
             key = VIEW_DASHBOARD,
             action = {
