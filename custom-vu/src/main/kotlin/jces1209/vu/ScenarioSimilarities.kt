@@ -4,7 +4,6 @@ import com.atlassian.performance.tools.jiraactions.api.SeededRandom
 import com.atlassian.performance.tools.jiraactions.api.WebJira
 import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.action.ProjectSummaryAction
-import com.atlassian.performance.tools.jiraactions.api.action.ViewDashboardAction
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveIssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory
@@ -15,6 +14,7 @@ import jces1209.vu.memory.SeededMemory
 import jces1209.vu.page.AbstractIssuePage
 import jces1209.vu.page.IssueNavigator
 import jces1209.vu.page.JiraTips
+import jces1209.vu.page.bars.side.SideBar
 import jces1209.vu.page.bars.topBar.TopBar
 import jces1209.vu.page.boards.browse.BrowseBoardsPage
 import jces1209.vu.page.customizecolumns.ColumnsEditor
@@ -44,7 +44,8 @@ class ScenarioSimilarities(
         browseProjectIssues: Action,
         issueNavigator: IssueNavigator,
         columnsEditor: ColumnsEditor,
-        topBar: TopBar
+        topBar: TopBar,
+        sideBar: SideBar
     ): List<Action> = assembleScenario(
         createIssue = createIssue,
         workOnDashboard = workOnDashboard,
@@ -116,6 +117,11 @@ class ScenarioSimilarities(
             globalSearchProbability = 0.05f,
             customizeColumnsProbability = 0.05f,
             switchBetweenIssuesProbability = 0.05f
+        ),
+        workOnTransition = WorkOnTransition(
+            meter = meter,
+            boardsMemory = boardsMemory.sprint,
+            sideBar = sideBar
         )
     )
 
@@ -131,7 +137,8 @@ class ScenarioSimilarities(
         workOnSprint: WorkOnSprint,
         browseProjectIssues: Action,
         workOnSearch: Action,
-        workOnTopBar: Action
+        workOnTopBar: Action,
+        workOnTransition: Action
     ): List<Action> {
         val exploreData = listOf(browseProjects, browseFilters, browseBoards)
         val spreadOut = mapOf(
@@ -144,8 +151,9 @@ class ScenarioSimilarities(
             workOnDashboard to 5,
             workOnSprint to 10,
             browseProjectIssues to 5,
+            workOnSearch to 5,
             workOnTopBar to 5,
-            workOnSearch to 5
+            workOnTransition to 5
         )
             .map { (action, proportion) -> Collections.nCopies(proportion, action) }
             .flatten()

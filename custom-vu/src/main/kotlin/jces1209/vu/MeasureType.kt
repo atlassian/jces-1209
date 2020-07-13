@@ -94,5 +94,8 @@ class MeasureType {
 
         @JvmField
         var VIEW_DASHBOARD = ActionType("View Dasboard") { Unit }
+
+        @JvmField
+        var TRANSITION_VIEW_BOARD = ActionType("View Board (Transition)") { Unit }
     }
 }
