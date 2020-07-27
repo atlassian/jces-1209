@@ -25,6 +25,7 @@ class CloudDashboardPage(
 
         waitForGadgetsLoad()
         return dashboardName;
+
     }
 }
 

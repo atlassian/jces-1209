@@ -14,7 +14,6 @@ import jces1209.vu.MeasureType.Companion.ISSUE_LINK_SEARCH_CHOOSE
 import jces1209.vu.MeasureType.Companion.ISSUE_LINK_SUBMIT
 import jces1209.vu.MeasureType.Companion.OPEN_MEDIA_VIEWER
 import jces1209.vu.page.AbstractIssuePage
-import jces1209.vu.page.AttachScreenShot
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -37,7 +36,6 @@ class WorkOnIssue(
     private val transitionProbability: Float
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
-
     override fun run() {
         val issueKey = issueKeyMemory.recall()
         if (issueKey == null) {

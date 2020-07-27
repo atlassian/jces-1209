@@ -22,6 +22,7 @@ class SlowAndMeaningful private constructor(
         .load(
             VirtualUserLoad.Builder()
                 .virtualUsers(72)
+                .ramp(Duration.ofMinutes(1))
                 .maxOverallLoad(TemporalRate(15.0, Duration.ofSeconds(1)))
                 .flat(duration)
                 .build()

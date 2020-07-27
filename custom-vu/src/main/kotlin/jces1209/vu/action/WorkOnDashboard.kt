@@ -21,10 +21,10 @@ class WorkOnDashboard(
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
     override fun run() {
-        viewDashboards()
-        val dashboardName = createDashboard()
-        createGadget(dashboardPage, dashboardName)
+       // viewDashboards()
+      //  val dashboardName = createDashboard()
         openDashboard(dashboardPage)
+      //  createGadget(dashboardPage, dashboardName)
     }
 
     private fun viewDashboards() {

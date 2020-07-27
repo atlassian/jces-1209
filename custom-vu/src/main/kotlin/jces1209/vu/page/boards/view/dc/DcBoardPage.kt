@@ -35,7 +35,7 @@ class DcBoardPage(
             .wait(
                 ExpectedConditions.and(
                     visibilityOfElementLocated(By.id("ghx-detail-issue")),
-                    visibilityOfElementLocated(By.className("issue-drop-zone"))
+                    presenceOfElementLocated(By.className("issue-drop-zone"))
                 ))
     }
 

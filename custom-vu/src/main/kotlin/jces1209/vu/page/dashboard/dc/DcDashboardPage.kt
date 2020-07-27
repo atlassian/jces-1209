@@ -21,11 +21,20 @@ class DcDashboardPage(
             .wait(visibilityOfElementLocated(By.name("portalPageName")))
             .sendKeys(dashboardName)
         driver
+            .wait(
+                ExpectedConditions.elementToBeClickable(By.id("create_dashboard"))
+            ).click()
+        driver.findElement(
+            By.id("edit-entity-dashboard-name"))
+            .sendKeys("TestDasboard" + System.currentTimeMillis())
+        driver.findElement(
+            By.id("edit-entity-submit"))
             .findElement(By.cssSelector("#add-dashboard-submit, #edit-entity-submit"))
             .click()
 
         waitForDashboards()
         return dashboardName;
+
     }
 }
 

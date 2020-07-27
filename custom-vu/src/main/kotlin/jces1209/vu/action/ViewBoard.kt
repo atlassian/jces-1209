@@ -59,7 +59,11 @@ class ViewBoard(
             key = VIEW_BOARD,
             action = {
                 meter.measure(
-                    key = ActionType("View Board ($boardType)") { Unit },
+                    key = if (boardType == "Backlog") {
+                        ActionType("View $boardType") { Unit }
+                    } else {
+                        ActionType("View $boardType Board ") { Unit }
+                    },
                     action = {
                         board
                             .goToBoard()
@@ -89,7 +93,13 @@ class ViewBoard(
     private fun previewIssue(boardType: String, board: BoardPage) {
         jiraTips.closeTips()
         meter.measure(MeasureType.ISSUE_PREVIEW_BOARD) {
-            meter.measure(ActionType("Preview issue ($boardType board)") { Unit }) {
+            var message: String
+            if (boardType == "Backlog") {
+                    message = "Old issue view $boardType"
+                } else {
+                    message = "Old issue view $boardType board"
+                }
+            meter.measure(ActionType(message) { Unit }) {
                 board.previewIssue()
             }
         }

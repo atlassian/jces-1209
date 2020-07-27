@@ -90,10 +90,10 @@ class MeasureType {
         val BROWSE_PROJECT_ISSUES = ActionType("Browse project issues") { Unit }
 
         @JvmField
-        var OPEN_MEDIA_VIEWER = ActionType("Quick search top bar") { Unit }
+        var OPEN_GLOBAL_SEARCH = ActionType("Global Issue Navigator") { Unit }
 
         @JvmField
-        var OPEN_GLOBAL_SEARCH = ActionType("Quick search top bar") { Unit }
+        var OPEN_MEDIA_VIEWER = ActionType("Quick search top bar") { Unit }
 
         @JvmField
         var VIEW_DASHBOARDS = ActionType("View Dasboards List") { Unit }

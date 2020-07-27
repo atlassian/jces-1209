@@ -11,15 +11,18 @@ class CloudProjectNavigatorPage(
     private val jira: WebJira
 ) : ProjectNavigatorPage {
 
+
     override fun openProject(projectKey: String): CloudProjectNavigatorPage {
         jira.driver.navigate().to("/projects/")
+
         jira.driver
             .wait(ExpectedConditions
-                .elementToBeClickable(
+                .visibilityOfElementLocated(
                     By.xpath(
                         "//*[@data-test-id='global-pages.directories.directory-base.content.table.container']" +
-                            "//*[@href='/browse/$projectKey']")))
-            .click()
+                            "//*[contains(@href,'/browse/')]")))
+        jira.navigateTo("projects/$projectKey/issues")
+        waitForNavigator()
         return this
     }
 

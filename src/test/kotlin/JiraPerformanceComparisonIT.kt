@@ -1,9 +1,12 @@
 import com.atlassian.performance.tools.concurrency.api.AbruptExecutorService
 import com.atlassian.performance.tools.concurrency.api.submitWithLogContext
+import com.atlassian.performance.tools.io.api.ensureDirectory
+import com.atlassian.performance.tools.jiraactions.api.ActionMetricStatistics
 import com.atlassian.performance.tools.jiraactions.api.scenario.Scenario
 import com.atlassian.performance.tools.report.api.FullReport
 import com.atlassian.performance.tools.report.api.FullTimeline
 import com.atlassian.performance.tools.report.api.WaterfallHighlightReport
+import com.atlassian.performance.tools.report.api.action.SearchJqlReport
 import com.atlassian.performance.tools.report.api.result.EdibleResult
 import com.atlassian.performance.tools.report.api.result.RawCohortResult
 import com.atlassian.performance.tools.virtualusers.api.VirtualUserOptions
@@ -16,6 +19,7 @@ import jces1209.SlowAndMeaningful
 import jces1209.log.LogConfigurationFactory
 import jces1209.vu.JiraCloudScenario
 import jces1209.vu.JiraDcScenario
+import jces1209.vu.PlaintextReport
 import org.apache.logging.log4j.core.config.ConfigurationFactory
 import org.junit.Test
 import java.nio.file.Paths
@@ -23,12 +27,13 @@ import java.time.Duration
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors.newCachedThreadPool
+import java.util.logging.Logger
 
 class JiraPerformanceComparisonIT {
 
     private val workspace = RootWorkspace(Paths.get("build")).currentTask
     private val quality: BenchmarkQuality = SlowAndMeaningful.Builder().build()
-
+    private val logger = Logger.getLogger(JiraPerformanceComparisonIT::class.java.name)
     init {
         ConfigurationFactory.setConfigurationFactory(LogConfigurationFactory(workspace))
     }
@@ -45,6 +50,8 @@ class JiraPerformanceComparisonIT {
                 .map { it.prepareForJudgement(FullTimeline()) }
         }
         FullReport().dump(results, workspace.isolateTest("Compare"))
+        planeTextReport(results,50)
+        planeTextReport(results,90)
         dumpMegaSlowWaterfalls(results)
     }
 
@@ -57,6 +64,24 @@ class JiraPerformanceComparisonIT {
         val properties = CohortProperties.load(secretsName)
         return pool.submitWithLogContext(properties.cohort) {
             benchmark(properties, scenario, quality)
+        }
+    }
+    private fun planeTextReport(results: List<EdibleResult>, persentile: Int){
+        results.forEach { result ->
+            val actionMetrics = result.actionMetrics
+            val cohortWorkspace = workspace.directory.resolve(result.cohort)
+            val report= PlaintextReport(
+                ActionMetricStatistics(result.actionMetrics)
+            ).generate(persentile)
+            logger.info("Plain text report "+result.cohort+":\n$report")
+            SearchJqlReport(
+                allMetrics = actionMetrics
+            ).report(cohortWorkspace)
+
+            WaterfallHighlightReport().report(
+                metrics = actionMetrics,
+                workspace = TestWorkspace(cohortWorkspace.resolve("WaterfallHighlight").ensureDirectory())
+            )
         }
     }
 

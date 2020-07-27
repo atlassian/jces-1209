@@ -55,14 +55,14 @@ class ScenarioSimilarities(
             meter = meter,
             issueKeyMemory = issueKeyMemory,
             random = seededRandom,
-            editProbability = 0.00f, // 0.10f if we can mutate data
-            commentProbability = 0.00f, // 0.04f if we can mutate data
-            linkIssueProbability = 0.00f, // 0.10f if we can mutate data
-            attachScreenShotProbability = 0.05f,
-            changeAssigneeProbability = 0.00f,
-            mentionUserProbability = 0.00f,
-            transitionProbability = 0.00f,
-            contextOperationProbability = 0.05f
+            editProbability = 0.0f, // 0.10f if we can mutate data
+            commentProbability = 0.0f, // 0.04f if we can mutate data
+            linkIssueProbability = 0.0f, // 0.10f if we can mutate data
+            attachScreenShotProbability = 0.0f,
+            changeAssigneeProbability = 0.0f,
+            mentionUserProbability = 0.0f,
+            transitionProbability = 0.0f,
+            contextOperationProbability = 0.0f
         ),
         projectSummary = ProjectSummaryAction(
             jira = jira,
@@ -113,11 +113,11 @@ class ScenarioSimilarities(
             filters = filtersMemory,
             jqlMemory = jqlMemory,
             issueKeyMemory = issueKeyMemory,
-            searchFilterProbability = 0.50f,
-            searchJclProbability = 0.05f,
-            globalSearchProbability = 0.05f,
-            customizeColumnsProbability = 0.05f,
-            switchBetweenIssuesProbability = 0.05f
+            searchFilterProbability = 0.0f,
+            searchJclProbability = 0.0f,
+            globalSearchProbability = 0.9f,
+            customizeColumnsProbability = 0.0f,
+            switchBetweenIssuesProbability = 0.0f
         ),
         workOnTransition = WorkOnTransition(
             meter = meter,
@@ -141,21 +141,22 @@ class ScenarioSimilarities(
         workOnSearch: Action,
         workOnTopBar: Action,
         workOnTransition: Action
+
     ): List<Action> {
         val exploreData = listOf(browseProjects, browseFilters, browseBoards)
         val spreadOut = mapOf(
             createIssue to 0, // 5 if we can mutate data
-            workAnIssue to 55,
-            projectSummary to 5,
-            browseProjects to 5,
-            browseBoards to 5,
-            viewBoard to 30,
-            workOnDashboard to 5,
-            workOnSprint to 10,
-            browseProjectIssues to 5,
-            workOnSearch to 5,
-            workOnTopBar to 5,
-            workOnTransition to 5
+            workAnIssue to 10,//10
+            projectSummary to 0,
+            browseProjects to 0,
+            browseBoards to 20,//20
+            viewBoard to 20,//20
+            workOnDashboard to 20,//20
+            workOnSprint to 0,
+            browseProjectIssues to 0,
+            workOnSearch to 30,//30
+            workOnTopBar to 0,
+            workOnTransition to 0
         )
             .map { (action, proportion) -> Collections.nCopies(proportion, action) }
             .flatten()

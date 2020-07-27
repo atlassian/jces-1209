@@ -76,6 +76,7 @@ class JiraDcScenario : Scenario {
             columnsEditor = DcColumnsEditor(jira.driver),
             topBar = DcTopBar(jira.driver),
             sideBar = DcSideBar(jira)
+
         )
     }
 }

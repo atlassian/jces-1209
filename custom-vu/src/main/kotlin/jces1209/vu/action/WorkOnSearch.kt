@@ -68,13 +68,19 @@ class WorkOnSearch(
     }
 
     private fun openGlobalIssueSearch(): IssueNavigator {
-        meter.measure(
-            key = MeasureType.OPEN_GLOBAL_SEARCH,
-            action = {
-                jira.driver.navigate().to("/issues/")
-                issueNavigator.waitForNavigator()
-            }
-        )
+        val querryList: MutableList<String> = ArrayList()
+        querryList.add("/issues/?jql=order%20by%20created%20DESC")
+
+
+        querryList.forEach {
+            meter.measure(
+                key = MeasureType.OPEN_GLOBAL_SEARCH,
+                action = {
+                    jira.navigateTo(it)
+                    issueNavigator.waitForNavigator()
+                }
+            )
+        }
         return issueNavigator
     }
 

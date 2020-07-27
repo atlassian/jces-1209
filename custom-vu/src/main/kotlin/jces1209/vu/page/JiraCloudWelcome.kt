@@ -11,10 +11,13 @@ class JiraCloudWelcome(
 
     fun skipToJira() = apply {
         val questionSkip = By.xpath("//*[contains(text(), 'Skip question')]")
+        val projectsList = By.xpath("//*[@data-test-id=" +
+            "'global-pages.directories.directory-base.content.table.container']")
         driver.wait(
             or(
                 presenceOfElementLocated(By.id("jira")),
-                elementToBeClickable(questionSkip)
+                elementToBeClickable(questionSkip),
+                presenceOfElementLocated(projectsList)
             )
         )
         repeat(2) {
