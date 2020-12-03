@@ -4,9 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.page.wait
 import jces1209.vu.page.FalliblePage
 import jces1209.vu.wait
 import org.openqa.selenium.By
-import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.ExpectedConditions.*
 import java.time.Duration
 
@@ -86,6 +84,14 @@ abstract class DashboardPage(
     }
 
     fun createGadget(projectName: String) {
+        val initialChartsCount = if (
+            driver.wait(presenceOfAllElementsLocatedBy(By.className("add-gadget-link")))
+                .size == 3
+            ) 0 else {
+            driver.wait(presenceOfAllElementsLocatedBy(By.className("bubble-chart-component-plot")))
+                .size
+        }
+
         driver
             .wait(elementToBeClickable(addGadgetLocator))
             .click()
@@ -101,13 +107,6 @@ abstract class DashboardPage(
         driver
             .wait(invisibilityOfElementLocated(By.id("gadget-dialog")))
 
-        val chartsNumber = try {driver
-            .wait(presenceOfAllElementsLocatedBy(By.className("bubble-chart-component-plot")))
-            .size
-        } catch (exc: TimeoutException) {
-            0
-        }
-
         driver
             .wait(elementToBeClickable(By.cssSelector("[id$='project-filter-picker']")))
             .sendKeys(projectName)
@@ -118,6 +117,6 @@ abstract class DashboardPage(
             .wait(elementToBeClickable(By.cssSelector(".button.submit")))
             .click()
         driver
-            .wait(numberOfElementsToBeMoreThan(By.cssSelector(".bubble-chart-component-plot, .aui-message-error"), chartsNumber))
+            .wait(numberOfElementsToBeMoreThan(By.cssSelector(".bubble-chart-component-plot, .aui-message-error"), initialChartsCount))
     }
 }

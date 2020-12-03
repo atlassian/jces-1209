@@ -37,6 +37,7 @@ abstract class ColumnsEditor(
     fun openEditor() {
         openColumnsList()
         restoreDefaults()
+        //adding delay to restore defaults
         Thread.sleep(3000)
         openColumnsList()
     }
@@ -51,19 +52,16 @@ abstract class ColumnsEditor(
     }
 
     fun selectItems(itemsCount: Int) {
-        System.out.println("checkboxes to select")
         driver.wait(
             condition = ExpectedConditions.numberOfElementsToBeMoreThan(
                 By.xpath("(.//*[@class='check-list-item'])"), 0),
             timeout = Duration.ofSeconds(15)
         )
-        System.out.println("checkboxes more then 0")
-        val items: List<WebElement>
-        items = driver.findElements(By.xpath(".//*[contains(@class,'check-list-item')]"))
-        System.out.println("checkboxes found= " + items.size)
+        val items = driver.findElements(By.xpath(".//*[contains(@class,'check-list-item')]"))
         for (i: Int in 0 until itemsCount) {
             items.get(i).click()
         }
+        //adding delay to render selected items
         Thread.sleep(3000)
     }
 
@@ -73,7 +71,6 @@ abstract class ColumnsEditor(
                 ".//*[@class='aui-button submit']")),
             timeout = Duration.ofSeconds(5)
         ).click()
-
     }
 
     private fun restoreDefaults() {
@@ -82,7 +79,5 @@ abstract class ColumnsEditor(
                 ".//*[@class='aui-button aui-button-link restore-defaults']")),
             timeout = Duration.ofSeconds(5)
         ).click()
-        System.out.println("Submitted")
     }
-
 }

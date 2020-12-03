@@ -45,6 +45,7 @@ class MovingIssue(
                 .first { it.isDisplayed })
             .perform()
 
+        //adding delay for jira to recognize dragAndDrop action and react to it
         Thread.sleep(1000)
         Actions(driver)
             .release()
