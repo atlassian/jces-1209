@@ -50,16 +50,19 @@ abstract class ScrumSprintPage(
         Actions(driver)
             .moveToElement(firstIssue)
             .perform()
+        //adding delay to start dragAndDrop action
         Thread.sleep(200)
 
         Actions(driver)
             .clickAndHold()
             .perform()
+        //adding delay to proceed with dragAndDrop
         Thread.sleep(150)
 
         Actions(driver)
             .moveToElement(targetIssue)
             .perform()
+        //adding delay to complete dragAndDrop
         Thread.sleep(100)
 
         Actions(driver)
