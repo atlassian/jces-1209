@@ -233,5 +233,8 @@ class MeasureType {
 
         @JvmField
         var VIEW_BACKLOG_BOARD = ActionType("View Backlog Board") { Unit }
+
+        @JvmField
+        var MANAGE_PROJECT_PERMISSIONS = ActionType("Manage Project Permissions") {Unit}
     }
 }
