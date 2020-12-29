@@ -33,7 +33,7 @@ class ViewKanbanBoard(
         val board = runBoardActions(kanbanBoardsMemory as SeededMemory<BoardPage>, "Kanban")
 
         if (board != null) {
-        repeat(2) {
+            repeat(2) {
                 changeIssueStatus(board)
             }
         }
