@@ -1,6 +1,5 @@
 package jces1209.vu.action.boards
 
-import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import jces1209.vu.Measure
 import jces1209.vu.MeasureType
@@ -28,19 +27,15 @@ class ViewKanbanBoard(
     configureBoardMeasureType = MeasureType.CONFIGURE_KANBAN_BOARD,
     viewIssueProbability = viewIssueProbability,
     configureBoardProbability = configureBoardProbability,
-    contextOperationProbability = contextOperationProbability), Action {
+    contextOperationProbability = contextOperationProbability) {
 
     override fun run() {
-        val board = getBoard(kanbanBoardsMemory as SeededMemory<BoardPage>)
-        if (board == null) {
-            logger.debug("I cannot recall a Kanban board, skipping...")
-            return
-        }
+        val board = runBoardActions(kanbanBoardsMemory as SeededMemory<BoardPage>, "Kanban")
 
-        viewBoardContent(board)
-
+        if (board != null) {
         repeat(2) {
-            changeIssueStatus(board)
+                changeIssueStatus(board)
+            }
         }
     }
 

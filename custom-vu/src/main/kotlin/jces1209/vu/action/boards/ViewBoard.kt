@@ -2,6 +2,7 @@ package jces1209.vu.action.boards
 
 import com.atlassian.performance.tools.jiraactions.api.ActionType
 import com.atlassian.performance.tools.jiraactions.api.VIEW_BOARD
+import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.observation.IssuesOnBoard
 import jces1209.vu.Measure
@@ -31,9 +32,34 @@ abstract class ViewBoard(
     private val viewIssueProbability: Float,
     private val configureBoardProbability: Float,
     private val contextOperationProbability: Float
-) {
+) : Action {
     protected val logger: Logger = LogManager.getLogger(this::class.java)
     protected val jiraTips = JiraTips(driver)
+
+    protected fun runBoardActions(boardsMemory: SeededMemory<BoardPage>, boardType: String): BoardPage? {
+        val board = getBoard(boardsMemory)
+        if (board == null) {
+            logger.debug("I cannot recall a $boardType board, skipping...")
+            return null
+        }
+
+        val boardContent = viewBoard(viewBoardMeasureType, board)
+            if (null != boardContent) {
+                measure.roll(viewIssueProbability) {
+                    if (boardContent.getIssueKeys().isEmpty()) {
+                        logger.debug("It requires some issues on board to test preview issue")
+                    } else {
+                        repeat(2) {
+                            previewIssue(issuePreviewMeasureType, board)
+                        }
+                        contextOperation(contextOperationMeasureType)
+                    }
+                }
+                jiraTips.closeTips()
+                configureBoard(configureBoardMeasureType, board)
+            }
+            return board
+    }
 
     protected fun viewBoard(measureType: ActionType<Unit>, board: BoardPage): BoardContent? {
         return measure.measure(VIEW_BOARD) {
@@ -78,24 +104,6 @@ abstract class ViewBoard(
                     .configureBoard()
                     .waitForLoadPage()
             }
-        }
-    }
-
-    protected fun viewBoardContent(board: BoardPage) {
-        val boardContent = viewBoard(viewBoardMeasureType, board)
-        if (null != boardContent) {
-            measure.roll(viewIssueProbability) {
-                if (boardContent.getIssueKeys().isEmpty()) {
-                    logger.debug("It requires some issues on board to test preview issue")
-                } else {
-                    repeat(2) {
-                        previewIssue(issuePreviewMeasureType, board)
-                    }
-                    contextOperation(contextOperationMeasureType)
-                }
-            }
-            jiraTips.closeTips()
-            configureBoard(configureBoardMeasureType, board)
         }
     }
 

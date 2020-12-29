@@ -1,6 +1,5 @@
 package jces1209.vu.action.boards
 
-import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import jces1209.vu.Measure
 import jces1209.vu.MeasureType
@@ -27,15 +26,9 @@ class ViewBacklog(
     configureBoardMeasureType = MeasureType.CONFIGURE_BACKLOG,
     viewIssueProbability = viewIssueProbability,
     configureBoardProbability = configureBoardProbability,
-    contextOperationProbability = contextOperationProbability), Action {
+    contextOperationProbability = contextOperationProbability) {
 
     override fun run() {
-        val board = getBoard(backlogBoardsMemory as SeededMemory<BoardPage>)
-        if (board == null) {
-            logger.debug("I cannot recall Backlog, skipping...")
-            return
-        }
-
-        viewBoardContent(board)
+        runBoardActions(backlogBoardsMemory as SeededMemory<BoardPage>, "Backlog")
     }
 }
