@@ -33,7 +33,7 @@ class AwsVus(
     private val configProperties: Properties?
 ) : VirtualUsersSource {
 
-    private val lifespan = Duration.ofMinutes(10) + duration
+    private val lifespan = Duration.ofMinutes(60) + duration
 
     override fun obtainVus(
         resultsTarget: Path,
