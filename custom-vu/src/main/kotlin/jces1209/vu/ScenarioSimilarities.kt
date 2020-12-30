@@ -9,6 +9,7 @@ import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.Adaptiv
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveJqlMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.adaptive.AdaptiveProjectMemory
 import jces1209.vu.action.*
+import jces1209.vu.action.boards.*
 import jces1209.vu.api.dashboard.DashboardApi
 import jces1209.vu.api.sprint.SprintApi
 import jces1209.vu.memory.BoardPagesMemory
@@ -115,23 +116,55 @@ class ScenarioSimilarities(
             meter = meter,
             boardsMemory = boardsMemory
         ),
-        viewBoard = ViewBoard(
+        viewScrumBoard = ViewScrumBoard(
             driver = jira.driver,
             measure = measure,
-            boardsMemory = boardsMemory.all,
+            scrumBoardsMemory = boardsMemory.sprint,
+            issueKeyMemory = issueKeyMemory,
+            viewIssueProbability = 0.50f,
+            configureBoardProbability = 0.05f,
+            contextOperationProbability = 0.05f
+        ),
+        viewKanbanBoard = ViewKanbanBoard(
+            driver = jira.driver,
+            measure = measure,
+            kanbanBoardsMemory = boardsMemory.kanban,
             issueKeyMemory = issueKeyMemory,
             viewIssueProbability = 0.50f,
             configureBoardProbability = 0.05f,
             contextOperationProbability = 0.05f,
-            changeIssueStatusProbability = 0.10f
+            changeIssueStatusProbability = 0.40f
+        ),
+        viewNextGenBoard = ViewNextGenBoard(
+            driver = jira.driver,
+            measure = measure,
+            nextGenBoardsMemory = boardsMemory.nextGen,
+            issueKeyMemory = issueKeyMemory,
+            viewIssueProbability = 0.50f,
+            configureBoardProbability = 0.05f,
+            contextOperationProbability = 0.05f
+        ),
+        viewBacklog = ViewBacklog(
+            driver = jira.driver,
+            measure = measure,
+            backlogBoardsMemory = boardsMemory.backlog,
+            issueKeyMemory = issueKeyMemory,
+            viewIssueProbability = 0.50f,
+            configureBoardProbability = 0.05f,
+            contextOperationProbability = 0.05f
         ),
         workOnSprint = WorkOnSprint(
             meter = meter,
-            driver = jira.driver,
             sprintApi = sprintApi,
             backlogsMemory = boardsMemory.backlog,
             sprintsMemory = boardsMemory.sprint,
-            jiraTips = JiraTips(jira.driver)
+            jiraTips = JiraTips(jira.driver),
+            measure = measure,
+            completeSprintProbability = 0.00f,
+            reorderIssueProbability = 0.50f,
+            moveIssueProbability = 0.50f,
+            startSprintProbability = 0.50f,
+            createSprintProbability = 0.50f
         ),
         browseProjectIssues = BrowseProjectIssues(
             meter = meter,
@@ -217,7 +250,10 @@ class ScenarioSimilarities(
         browseProjects: Action,
         browseFilters: Action,
         browseBoards: Action,
-        viewBoard: Action,
+        viewScrumBoard: Action,
+        viewKanbanBoard: Action,
+        viewNextGenBoard: Action,
+        viewBacklog: Action,
         workOnDashboard: Action,
         workOnSprint: Action,
         browseProjectIssues: Action,
@@ -250,7 +286,10 @@ class ScenarioSimilarities(
             projectSummary to ((properties.getProperty("action.projectSummary")?.toInt()) ?: 5),
             browseProjects to ((properties.getProperty("action.browseProjects")?.toInt()) ?: 5),
             browseBoards to ((properties.getProperty("action.browseBoards")?.toInt()) ?: 5),
-            viewBoard to ((properties.getProperty("action.viewBoard")?.toInt()) ?: 30),
+            viewScrumBoard to ((properties.getProperty("action.viewScrumBoard")?.toInt()) ?: 30),
+            viewKanbanBoard to ((properties.getProperty("action.viewKanbanBoard")?.toInt()) ?: 30),
+            viewNextGenBoard to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
+            viewBacklog to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
             workOnDashboard to ((properties.getProperty("action.workOnDashboard")?.toInt()) ?: 5),
             workOnSprint to ((properties.getProperty("action.workOnSprint")?.toInt()) ?: 0), // 3 if we can mutate data
             browseProjectIssues to ((properties.getProperty("action.browseProjectIssues")?.toInt()) ?: 5),
