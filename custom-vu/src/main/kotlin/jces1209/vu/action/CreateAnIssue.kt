@@ -27,11 +27,13 @@ class CreateAnIssue(
     private val logger: Logger = LogManager.getLogger(this::class.java)
 
     override fun run() {
+        /* Commenting this for testing
+
         val project = projectMemory.recall()
         if (project == null) {
             logger.debug("Skipping Create issue action. I have no knowledge of projects.")
             return
-        }
+        }*/
         var issueKey: String? = null
         try {
             meter.measure(CREATE_ISSUE) {
