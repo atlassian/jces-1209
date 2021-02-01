@@ -270,13 +270,7 @@ class ScenarioSimilarities(
         browseProjectRoles: Action,
         manageProjectPermissions: Action
     ): List<Action> {
-        val readTrafficShapeConfig = System.getenv("readTrafficShapeConfig")
-        var properties = Properties()
-
-        if (!readTrafficShapeConfig.isNullOrEmpty()) {
-            val resourceName = TrafficDataParser.parseData(jira.base.host, readTrafficShapeConfig)
-            properties = ConfigProperties.load(resourceName)
-        }
+        val properties = ConfigProperties.load("${jira.base.host}.properties")
 
         val exploreData = listOf(browseProjects, browseFilters, browseBoards)
         val spreadOut = mapOf(
