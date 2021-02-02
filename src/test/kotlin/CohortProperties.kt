@@ -17,13 +17,14 @@ class CohortProperties(
             val secrets = File("cohort-secrets/").resolve(secretsName)
             val properties = Properties()
             secrets.bufferedReader().use { properties.load(it) }
+            val jiraUri = URI(properties.getProperty("jira.uri")!!)
             return CohortProperties(
-                jira = URI(properties.getProperty("jira.uri")!!),
+                jira = jiraUri,
                 userName = properties.getProperty("user.name")!!,
                 userPassword = properties.getProperty("user.password")!!,
                 cohort = properties.getProperty("cohort")!!,
                 jiraType = properties.getProperty("jira.type"),
-                trafficConfigObj = ConfigProperties.load(properties.getProperty("config.trafficConfigFile"))
+                trafficConfigObj = ConfigProperties.load("${jiraUri.host}.properties")
             )
         }
     }
