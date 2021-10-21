@@ -25,7 +25,7 @@ class CreateAnIssue(
     private val createIssueButtons: List<By>
 ) : Action {
     private val logger: Logger = LogManager.getLogger(this::class.java)
-
+    private val summaryLocator = By.id("summary-field")
     override fun run() {
         val project = projectMemory.recall()
         if (project == null) {
@@ -37,16 +37,24 @@ class CreateAnIssue(
             meter.measure(CREATE_ISSUE) {
                 jira.goToDashboard().dismissAllPopups()
                 openDialog().fillRequiredFields() // TODO: to be fair, we should pick a random project and random issue type
+                jira.driver.wait(
+                    condition = elementToBeClickable(summaryLocator),
+                    timeout = Duration.ofSeconds(30)
+                ).click()
+                jira.driver.findElement(summaryLocator).sendKeys("Summary")
+                jira.driver.wait(
+                    condition = elementToBeClickable(By.xpath("//button[starts-with(@data-testid,'issue-create-commons.ui.assignee-field.assing-to-me-button')]")),
+                    timeout = Duration.ofSeconds(10)
+                ).click()
                 meter.measure(CREATE_ISSUE_SUBMIT) {
                     jira.driver.wait(
-                        condition = elementToBeClickable(By.id("create-issue-submit")),
+                        condition = elementToBeClickable(By.xpath("//button[starts-with(@form,'issue-create')]")),
                         timeout = Duration.ofSeconds(50)
                     ).click()
-                    val createdIssueMessage = jira.driver.wait(
-                        condition = visibilityOfElementLocated(By.className("issue-created-key")),
+                    jira.driver.wait(
+                        condition = visibilityOfElementLocated(By.xpath("//span[contains(text(),'created')]")),
                         timeout = Duration.ofSeconds(30)
                     )
-                    issueKey = createdIssueMessage.getAttribute("data-issue-key")
                 }
             }
         } finally {
@@ -70,13 +78,15 @@ class CreateAnIssue(
                 .filter { it.isDisplayed }
                 .first()
                 .click()
-
             driver.wait(
-                condition = visibilityOfElementLocated(By.id("create-issue-dialog")),
+                condition = and(
+                    visibilityOfElementLocated(By.xpath("//form[starts-with(@id,'issue-create')]")),
+                    visibilityOfElementLocated(summaryLocator)
+                ),
                 timeout = Duration.ofSeconds(30)
             )
             (driver as JavascriptExecutor).executeScript("window.onbeforeunload = null")
         }
-        return IssueForm(By.cssSelector("form[name=jiraform]"), driver)
+        return IssueForm(By.id("issue-create.ui.modal.create-form"), driver)
     }
 }

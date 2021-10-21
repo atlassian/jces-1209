@@ -20,16 +20,16 @@ class TakeScreenshotHook private constructor(
     private val counterPerAction = ConcurrentHashMap<String, AtomicInteger>()
 
     override fun run(actionMetricBuilder: ActionMetric.Builder) {
-        val actionMetric = actionMetricBuilder.build()
-        val counter = counterPerAction.computeIfAbsent(actionMetric.label) {
-            AtomicInteger()
-        }.incrementAndGet()
-        if (counter <= limit) {
-            saveScreenshot(
-                directory
-                    .resolve(actionMetric.label + "-" + counter)
-            )
-        }
+//        val actionMetric = actionMetricBuilder.build()
+//        val counter = counterPerAction.computeIfAbsent(actionMetric.label) {
+//            AtomicInteger()
+//        }.incrementAndGet()
+//        if (counter <= limit) {
+//            saveScreenshot(
+//                directory
+//                    .resolve(actionMetric.label + "-" + counter)
+//            )
+//        }
     }
 
     private fun saveScreenshot(

@@ -274,16 +274,16 @@ class ScenarioSimilarities(
 
         val exploreData = listOf(browseProjects, browseFilters, browseBoards)
         val spreadOut = mapOf(
-            createIssue to ((properties.getProperty("action.createIssue")?.toInt()) ?: 0), // 5 if we can mutate data
+            createIssue to ((properties.getProperty("action.createIssue")?.toInt()) ?: 5), // 5 if we can mutate data
             workAnIssue to ((properties.getProperty("action.workAnIssue")?.toInt()) ?: 55),
             manageProjects to ((properties.getProperty("action.manageProjects")?.toInt()) ?: 5),
-            projectSummary to ((properties.getProperty("action.projectSummary")?.toInt()) ?: 5),
+//            projectSummary to ((properties.getProperty("action.projectSummary")?.toInt()) ?: 5),  too slow
             browseProjects to ((properties.getProperty("action.browseProjects")?.toInt()) ?: 5),
             browseBoards to ((properties.getProperty("action.browseBoards")?.toInt()) ?: 5),
             viewScrumBoard to ((properties.getProperty("action.viewScrumBoard")?.toInt()) ?: 30),
             viewKanbanBoard to ((properties.getProperty("action.viewKanbanBoard")?.toInt()) ?: 30),
-            viewNextGenBoard to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
-            viewBacklog to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
+//            viewNextGenBoard to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
+//            viewBacklog to ((properties.getProperty("action.viewNextGenBoard")?.toInt()) ?: 30),
             workOnDashboard to ((properties.getProperty("action.workOnDashboard")?.toInt()) ?: 5),
             workOnSprint to ((properties.getProperty("action.workOnSprint")?.toInt()) ?: 0), // 3 if we can mutate data
             browseProjectIssues to ((properties.getProperty("action.browseProjectIssues")?.toInt()) ?: 5),
@@ -292,13 +292,13 @@ class ScenarioSimilarities(
             workOnTopBar to ((properties.getProperty("action.workOnTopBar")?.toInt()) ?: 5),
             bulkEdit to ((properties.getProperty("action.bulkEdit")?.toInt()) ?: 0), // 5 if we can mutate data
             workOnTransition to ((properties.getProperty("action.workOnTransition")?.toInt()) ?: 5),
-            workOnWorkflow to ((properties.getProperty("action.workOnWorkflow")?.toInt()) ?: 5),
+//            workOnWorkflow to ((properties.getProperty("action.workOnWorkflow")?.toInt()) ?: 5),
             browseFieldScreens to ((properties.getProperty("action.browseFieldScreens")?.toInt()) ?: 5),
             browseFieldConfigurations to ((properties.getProperty("action.browseFieldConfigurations")?.toInt()) ?: 5),
             browseCustomFields to ((properties.getProperty("action.browseCustomFields")?.toInt()) ?: 5),
             browseIssueTypes to ((properties.getProperty("action.browseIssueTypes")?.toInt()) ?: 5),
-            browseProjectRoles to ((properties.getProperty("action.browseProjectRoles")?.toInt()) ?: 5),
-            manageProjectPermissions to ((properties.getProperty("action.manageProjectPermissions")?.toInt()) ?: 5)
+            browseProjectRoles to ((properties.getProperty("action.browseProjectRoles")?.toInt()) ?: 5)
+//            manageProjectPermissions to ((properties.getProperty("action.manageProjectPermissions")?.toInt()) ?: 5)
         )
             .map { (action, proportion) -> Collections.nCopies(proportion, action) }
             .flatten()

@@ -2,9 +2,8 @@ package jces1209.vu.page.issuenavigator
 
 import com.atlassian.performance.tools.jiraactions.api.WebJira
 import jces1209.vu.page.FalliblePage
-import jces1209.vu.page.issuenavigator.bulkoperation.BulkOperationPage
-import jces1209.vu.page.ViewSubscriptions.ViewSubscriptions
 import jces1209.vu.page.ViewSubscriptions.cloud.CloudViewSubscriptions
+import jces1209.vu.page.issuenavigator.bulkoperation.BulkOperationPage
 import jces1209.vu.page.issuenavigator.bulkoperation.CloudBulkOperationPage
 import jces1209.vu.wait
 import org.openqa.selenium.By
@@ -40,6 +39,7 @@ class CloudIssueNavigator(
                     presenceOfElementLocated(By.xpath("//div[@data-test-id='issue.views.issue-details.issue-layout.issue-layout']"))
                 )
             ),
+            presenceOfElementLocated(By.xpath("//div[@data-test-id='profilecard-next.ui.profilecard.profilecard-trigger']")),
             and(
                 presenceOfElementLocated(By.id("summary-val")),
                 presenceOfElementLocated(By.id("status-val")),
@@ -83,15 +83,9 @@ class CloudIssueNavigator(
 
     override fun selectIssue() {
         val element = getIssueElementFromList()
-        val title = element.getAttribute("title")
         element.click()
         driver.wait(
-            and(
-                presenceOfElementLocated(By.xpath("//*[@data-test-id = 'issue.views.issue-base.foundation.summary.heading' and contains(text(), '$title')]")),
-                visibilityOfElementLocated(By.xpath("//*[@aria-label='Not watching']")),
-                visibilityOfElementLocated(By.xpath("//*[@data-test-id='issue.activity.comment']")),
-                visibilityOfElementLocated(By.xpath("//*[@aria-label='Add attachment']"))
-            )
+            presenceOfElementLocated(By.xpath("//*[@data-test-id = 'issue.views.issue-base.foundation.summary.heading']"))
         )
     }
 
@@ -110,7 +104,8 @@ class CloudIssueNavigator(
 
     private fun getIssueElementFromList(): WebElement {
         val elements = driver.wait(
-            presenceOfAllElementsLocatedBy(By.xpath("//*[@class ='issue-list']/*[not(@class ='focused')]"))
+            condition = presenceOfAllElementsLocatedBy(By.xpath("//*[@class ='issue-list']/*[not(@class ='focused')]")),
+            duration = Duration.ofSeconds(15)
         )
         val rndIndex = Random().nextInt(elements.size - 1)
         return elements[rndIndex]

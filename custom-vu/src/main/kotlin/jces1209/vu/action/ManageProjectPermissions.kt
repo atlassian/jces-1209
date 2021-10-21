@@ -24,8 +24,8 @@ class ManageProjectPermissions(
 
         measure.measure(MeasureType.MANAGE_PROJECT_PERMISSIONS) {
             val projectPermissionsPage = openProjectPermissionsPage(projectKey.key)
-            projectPermissionsPage.openEditPermissionsView()
-            projectPermissionsPage.editPermission()
+//            projectPermissionsPage.openEditPermissionsView()
+//            projectPermissionsPage.editPermission()  // Permissions aren't editable on the Free plan
         }
     }
 

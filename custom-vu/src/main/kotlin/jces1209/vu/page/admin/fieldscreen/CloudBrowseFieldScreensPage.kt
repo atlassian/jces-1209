@@ -12,12 +12,7 @@ class CloudBrowseFieldScreensPage(
 
     private val falliblePage = FalliblePage.Builder(
         jira.driver,
-        and(
-            visibilityOfElementLocated(By.id("filter-screens")),
-            visibilityOfElementLocated(By.id("field-screens-table")),
-            presenceOfAllElementsLocatedBy(By.cssSelector("[data-field-screen-id]")),
-            presenceOfElementLocated(By.cssSelector(".field-screen-name, .operations-list"))
-        )
+        presenceOfElementLocated(By.xpath("//td[@data-testid='admin-pages-screens-page.ui.screens-table.dynamic-table-stateless--cell-0']"))
     )
         .cloudErrors()
         .timeout(Duration.ofSeconds(60))

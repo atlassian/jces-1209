@@ -32,7 +32,7 @@ abstract class DashboardPage(
         driver
             .wait(
                 or(
-                    visibilityOfElementLocated(By.xpath("//a[contains(@href,'/secure/Dashboard.jspa?selectPageId')]")),
+                    visibilityOfElementLocated(By.xpath("//a[contains(@href,'dashboards')]")),
                     visibilityOfElementLocated(By.xpath("//*[@id='pp_favourite']/tbody/tr/td[text()='You have no favorite dashboards.']")),
                     visibilityOfElementLocated(By.xpath("//*[@id='pp_popular']/tbody/tr/td[text()='There are no shared dashboards.']"))
                 )
@@ -53,7 +53,7 @@ abstract class DashboardPage(
     fun openDashboard(): DashboardPage {
         driver.wait(
             condition = visibilityOfAllElementsLocatedBy(
-                By.xpath("(//a[contains(@href,'/secure/Dashboard.jspa?selectPageId') and not(@class)])")),
+                By.xpath("(//a[contains(@href,'dashboard') and not(@class)])")),
             timeout = Duration.ofSeconds(50)
         )
             .filter { it.text.trim() != "System Dashboard" }
@@ -64,11 +64,7 @@ abstract class DashboardPage(
     fun waitForGadgetsLoad() {
         FalliblePage.Builder(
             expectedContent = or(
-                elementToBeClickable(addGadgetLocator),
-                visibilityOfElementLocated(By.className("dashboard-item-frame gadget-container")),
-                and(
-                    visibilityOfElementLocated(By.className("aui-page-header-main")),
-                    visibilityOfElementLocated(By.id("tools-dropdown-icon")))
+                visibilityOfElementLocated(By.xpath("//div[starts-with(@id,'gadget')]"))
             ),
             webDriver = driver
         )
@@ -76,7 +72,6 @@ abstract class DashboardPage(
             .cloudErrors()
             .build()
             .waitForPageToLoad()
-
         driver
             .wait(
                 timeout = Duration.ofSeconds(30),

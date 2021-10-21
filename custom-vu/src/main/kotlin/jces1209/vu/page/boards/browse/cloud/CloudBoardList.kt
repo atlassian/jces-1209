@@ -32,15 +32,7 @@ class CloudBoardList(
                 val type = cells[typeColumnIndex]!!.text.trim()
                 val name = cells[nameColumnIndex]!!
                 val uri = name.findElement(By.tagName("a")).getAttribute("href").let { it.removeSuffix("&useStoredSettings=true") }
-                when (type) {
-                    "Kanban" -> kanbanBoards.add(CloudKanbanBoardPage(driver, URI(uri)))
-                    "Scrum" -> {
-                        backlogBoards.add(CloudScrumBacklogPage(driver, URI("$uri&view=planning&issueLimit=100")))
-                        sprintBoards.add(CloudScrumSprintPage(driver, URI(uri)))
-                    }
-                    "Next-gen" -> nextGenBoards.add(CloudNextGenBoardPage(driver, URI(uri)))
-                    else -> throw Exception("Unknown board type: $type")
-                }
+                nextGenBoards.add(CloudNextGenBoardPage(driver, URI(uri)))
             }
         return MixedBoards(kanbanBoards, backlogBoards, sprintBoards, nextGenBoards)
     }

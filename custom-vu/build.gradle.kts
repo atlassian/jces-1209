@@ -23,6 +23,7 @@ dependencies {
 
     testCompile("junit:junit:4.12")
     testCompile("org.assertj:assertj-core:3.11.1")
+    testCompile("com.atlassian.performance.tools:docker-infrastructure:0.3.3")
 }
 
 tasks.getByName("shadowJar", ShadowJar::class).apply {
@@ -43,6 +44,8 @@ configurations.all {
                 "com.google.code.gson:gson" -> useVersion("2.8.0")
                 "com.google.guava:guava" -> useVersion("25.0-jre")
                 "org.slf4j:slf4j-api" -> useVersion("1.8.0-alpha2")
+                "org.jetbrains:annotations" -> useVersion("17.0.0")
+                "org.apache.commons:commons-compress" -> useVersion("1.19")
             }
             when (requested.group) {
                 "org.jetbrains.kotlin" -> useVersion(kotlinVersion)

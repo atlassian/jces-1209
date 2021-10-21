@@ -6,6 +6,7 @@ import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.memories.IssueKeyMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.JqlMemory
 import com.atlassian.performance.tools.jiraactions.api.memories.Memory
+import com.atlassian.performance.tools.jiraactions.api.memories.ProjectMemory
 import com.atlassian.performance.tools.jiraactions.api.observation.SearchJqlObservation
 import com.atlassian.performance.tools.jiraactions.api.page.IssueNavigatorPage
 import jces1209.vu.Measure
@@ -49,10 +50,6 @@ class WorkOnSearch(
             issueNavigator
                 .openNavigator()
                 .waitForBeingLoaded()
-
-            measure.measure(SWITCH_BETWEEN_ISSUES_IN_SEARCH_RESULTS) {
-                issueNavigator.selectIssue()
-            }
         }
     }
 
@@ -60,21 +57,15 @@ class WorkOnSearch(
 
         val orderByCreatedProbability = 0.9f
         val lastViewedProbability = 0.02f
-        val byProjectProbability = 0.02f
-        val withAssigneeProbability = 0.02f
         val byStatusProbability = 0.02f
         val emptyProbability = 0.02f
         val orderByCreated = "/issues/?jql=order%20by%20created%20DESC"
         val lastViewed = "/issues/?jql=order%20by%20lastViewed%20DESC%2C%20key%20DESC"
-        val byProject = "/issues/?jql=project%20is%20"
-        val withAssignee = "/issues/?jql=Assignee%20"
         val byStatus = "/issues/?jql=status%20not%20in%20(%20Resolved)"
         val empty = "/issues/"
         val queryList = HashMap<String, Float>()
         queryList[orderByCreated] = orderByCreatedProbability
         queryList[lastViewed] = lastViewedProbability
-        queryList[byProject] = byProjectProbability
-        queryList[withAssignee] = withAssigneeProbability
         queryList[byStatus] = byStatusProbability
         queryList[empty] = emptyProbability
 

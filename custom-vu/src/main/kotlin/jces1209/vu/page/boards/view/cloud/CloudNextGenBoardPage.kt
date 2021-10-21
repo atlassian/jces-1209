@@ -23,7 +23,8 @@ class CloudNextGenBoardPage(
         expectedContent = listOf(
             By.xpath("//*[contains(text(), 'Your board has too many issues')]"),
             By.xpath("//*[contains(text(), 'Board not accessible')]"),
-            By.cssSelector("[data-test-id='platform-board-kit.common.ui.column-header.header.column-header-container']")
+            By.cssSelector("[data-test-id='platform-board-kit.common.ui.column-header.header.column-header-container']"),
+            By.xpath("//*[@data-testid = 'issue-navigator-action-advanced-search-button.advanced-search-button']")
         )
     )
         .cloudErrors()

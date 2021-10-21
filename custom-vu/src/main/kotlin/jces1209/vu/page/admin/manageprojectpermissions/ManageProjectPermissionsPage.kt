@@ -34,7 +34,6 @@ abstract class ManageProjectPermissionsPage(
         driver.wait(
             condition = ExpectedConditions.and(
                 ExpectedConditions.elementToBeClickable(grantPermissionButton),
-                ExpectedConditions.numberOfElementsToBe(By.className("permissions-group"), 7),
                 ExpectedConditions.numberOfElementsToBeMoreThan(editPermissionButton, 0)
             ),
             timeout = (Duration.ofSeconds(30))

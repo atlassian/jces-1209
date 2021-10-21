@@ -4,6 +4,7 @@ import com.atlassian.performance.tools.jiraactions.api.BROWSE_PROJECTS
 import com.atlassian.performance.tools.jiraactions.api.WebJira
 import com.atlassian.performance.tools.jiraactions.api.action.Action
 import com.atlassian.performance.tools.jiraactions.api.measure.ActionMeter
+import com.atlassian.performance.tools.jiraactions.api.memories.Project
 import com.atlassian.performance.tools.jiraactions.api.memories.ProjectMemory
 import jces1209.vu.page.JiraCloudProjectList
 
@@ -18,6 +19,7 @@ class BrowseCloudProjects(
             jira.navigateTo("projects")
             JiraCloudProjectList(jira.driver).lookForProjects()
         }
-        projectMemory.remember(projectList.listProjects())
+        val projects: List<Project> = projectList.listProjects()
+        projectMemory.remember(projects)
     }
 }

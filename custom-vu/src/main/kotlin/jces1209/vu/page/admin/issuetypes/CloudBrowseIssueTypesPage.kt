@@ -15,14 +15,15 @@ class CloudBrowseIssueTypesPage(
 
     private val falliblePage = FalliblePage.Builder(
         jira.driver,
-        and(
+        or(
             loadingPageExpectedCondition,
             or(
-                presenceOfAllElementsLocatedBy(By.xpath("//div[@role='group']/a")),
-                presenceOfAllElementsLocatedBy(By.xpath("//*[@data-testid = 'NavigationItem']"))
-            ),
-            presenceOfElementLocated(By.xpath("//*[. = 'Issue types']")),
-            presenceOfElementLocated(By.className("search-entry"))
+                presenceOfAllElementsLocatedBy(By.xpath("//*[@data-testid = 'admin-pages-issue-types-directory.ui.table.dynamic-table-stateless--cell-0']")),
+                and(
+                    presenceOfElementLocated(By.xpath("//*[. = 'Issue types']")),
+                    presenceOfElementLocated(By.xpath("//*[@data-test-id = 'searchfield']"))
+                )
+            )
         )
     )
         .cloudErrors()

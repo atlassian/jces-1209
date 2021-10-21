@@ -56,7 +56,6 @@ abstract class ViewBoard(
                     }
                 }
                 jiraTips.closeTips()
-                configureBoard(configureBoardMeasureType, board)
             }
             return board
     }

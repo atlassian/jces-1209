@@ -14,7 +14,6 @@ class CloudManageProjectsPage(
     override val falliblePage = FalliblePage.Builder(
         jira.driver,
         and(
-            visibilityOfElementLocated(By.className("aui-page-panel")),
             visibilityOfElementLocated(tableContainerLocator),
             visibilityOfNestedElementsLocatedBy(tableContainerLocator, By.xpath("//*[. = 'Name']")),
             visibilityOfNestedElementsLocatedBy(tableContainerLocator, By.xpath("//*[@role = 'presentation']"))

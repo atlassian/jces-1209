@@ -18,7 +18,7 @@ class BrowseBoards(
 
     override fun run() {
         val boardList = meter.measure(BROWSE_BOARDS) {
-            jira.navigateTo("secure/ManageRapidViews.jspa")
+            jira.navigateTo("jira/settings/projects/manage")
             browseBoardsPage
                 .waitForBoards()
         }

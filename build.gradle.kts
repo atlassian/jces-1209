@@ -86,6 +86,8 @@ configurations.all {
                     "org.apache.commons:commons-csv" -> useVersion("1.4")
                     "org.apache.httpcomponents:httpcore" -> useVersion("4.4.9")
                     "org.codehaus.plexus:plexus-utils" -> useVersion("3.1.0")
+                    "commons-codec:commons-codec" -> useVersion("1.11")
+                    "com.amazonaws:aws-java-sdk-ec2" -> useVersion("1.11.817")
                 }
                 when (requested.group) {
                     "org.jetbrains.kotlin" -> useVersion("1.2.70")

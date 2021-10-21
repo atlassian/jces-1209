@@ -13,3 +13,13 @@ fun <T> WebDriver.wait(
         timeout = Duration.ofSeconds(10)
     )
 }
+
+fun <T> WebDriver.wait(
+    condition: ExpectedCondition<T>,
+    duration: Duration
+): T {
+    return this.wait(
+        condition = condition,
+        timeout = duration
+    )
+}
