@@ -4,6 +4,7 @@ import java.net.URI
 
 val kotlinVersion = "1.2.70"
 val seleniumVersion = "3.141.59"
+val log4jVersion = "2.17.0"
 
 plugins {
     kotlin("jvm")
@@ -35,7 +36,7 @@ configurations.all {
         failOnVersionConflict()
         dependencySubstitution {
             substitute(module("org.apache.logging.log4j:log4j-slf4j-impl"))
-                .with(module("org.apache.logging.log4j:log4j-slf4j18-impl:2.12.1"))
+                .with(module("org.apache.logging.log4j:log4j-slf4j18-impl:$log4jVersion"))
         }
         eachDependency {
             when (requested.module.toString()) {
@@ -46,7 +47,7 @@ configurations.all {
             }
             when (requested.group) {
                 "org.jetbrains.kotlin" -> useVersion(kotlinVersion)
-                "org.apache.logging.log4j" -> useVersion("2.12.1")
+                "org.apache.logging.log4j" -> useVersion(log4jVersion)
                 "org.seleniumhq.selenium" -> useVersion(seleniumVersion)
             }
         }

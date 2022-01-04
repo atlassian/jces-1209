@@ -43,6 +43,8 @@ task<Test>("processResults").apply {
     include("**/ExistingResultsIT.class")
 }
 
+val log4jVersion = "2.17.0"
+
 dependencies {
     testCompile(project(":custom-vu"))
     testCompile("com.atlassian.performance.tools:jira-performance-tests:[3.3.0,4.0.0)")
@@ -59,7 +61,6 @@ dependencies {
     testCompile("junit:junit:4.12")
     testCompile("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.70")
     testCompile("org.assertj:assertj-core:3.11.1")
-    val log4jVersion = "2.12.1"
     testCompile("org.apache.logging.log4j:log4j-api:$log4jVersion")
     testCompile("org.apache.logging.log4j:log4j-core:$log4jVersion")
     testRuntime("org.apache.logging.log4j:log4j-slf4j18-impl:$log4jVersion")
@@ -72,7 +73,7 @@ configurations.all {
         resolutionStrategy {
             dependencySubstitution {
                 substitute(module("org.apache.logging.log4j:log4j-slf4j-impl"))
-                    .with(module("org.apache.logging.log4j:log4j-slf4j18-impl:2.12.1"))
+                    .with(module("org.apache.logging.log4j:log4j-slf4j18-impl:$log4jVersion"))
             }
             eachDependency {
                 when (requested.module.toString()) {
@@ -89,7 +90,7 @@ configurations.all {
                 }
                 when (requested.group) {
                     "org.jetbrains.kotlin" -> useVersion("1.2.70")
-                    "org.apache.logging.log4j" -> useVersion("2.12.1")
+                    "org.apache.logging.log4j" -> useVersion(log4jVersion)
                     "org.seleniumhq.selenium" -> useVersion("3.141.59")
                 }
             }
